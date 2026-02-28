@@ -11,6 +11,7 @@
         .form-group { margin-bottom: 20px; }
         label { display: block; margin-bottom: 8px; font-weight: bold; color: #333; }
         input, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        .preview-img { width: 100%; max-height: 250px; object-fit: contain; margin-top: 10px; border: 1px dashed #ccc; display: none; }
         .btn-save { width: 100%; padding: 15px; background: #f39c12; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
         .header-box { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #f39c12; padding-bottom: 10px; }
     </style>
@@ -19,14 +20,16 @@
 
     <div class="header-box">
         <h2>SETTING BANK & REVENUE</h2>
-        <p>Admin-Zero Exclusive Access</p>
+        <p>Admin-Zero Exclusive Access (adeali490@gmail.com)</p>
     </div>
 
     <div class="card">
         <form id="bankForm">
             <div class="form-group">
-                <label>Barcode QRIS eWallet (Text/URL Data):</label>
-                <textarea id="qris" rows="3" placeholder="Input QRIS raw data or link..."></textarea>
+                <label>Upload Barcode QRIS (Image/Gambar):</label>
+                <input type="file" id="qrisFile" accept="image/*">
+                <img id="qrisPreview" class="preview-img">
+                <input type="hidden" id="currentQrisUrl">
             </div>
 
             <div class="form-group">
@@ -35,11 +38,11 @@
             </div>
 
             <div class="form-group">
-                <label>Rekening Bank MasterVisa:</label>
-                <textarea id="mastervisa" rows="3" placeholder="Bank Name - Account Number - Name..."></textarea>
+                <label>Rekening Bank MasterVisa (Text):</label>
+                <textarea id="mastervisa" rows="3" placeholder="Nama Bank - No Rekening - Atas Nama"></textarea>
             </div>
 
-            <button type="submit" class="btn-save">UPDATE & DISTRIBUTE TO ADMIN</button>
+            <button type="submit" id="btnSubmit" class="btn-save">UPDATE & DISTRIBUTE TO ADMIN</button>
         </form>
         <button onclick="location.href='dashboard_admin_zero.html'" style="margin-top:15px; width:100%; background:none; border:none; color:gray; cursor:pointer;">
             Back to Dashboard / Kembali
@@ -49,33 +52,69 @@
     <script>
         const _supabase = supabase.createClient('https://fdvjaulucahzmmmdwkau.supabase.co', 'sb_publishable_yN4AQrZGQEH8tzhkCsLf2g_KGoakIFa');
 
-        // Load data lama
-        async function loadBankSettings() {
+        // Load data lama & Tampilkan Preview
+        async function loadSettings() {
             const { data } = await _supabase.from('bank_settings').select('*').single();
             if (data) {
-                document.getElementById('qris').value = data.qris_data;
-                document.getElementById('paypal').value = data.paypal_email;
-                document.getElementById('mastervisa').value = data.mastervisa_account;
+                document.getElementById('paypal').value = data.paypal_email || '';
+                document.getElementById('mastervisa').value = data.mastervisa_account || '';
+                if(data.qris_image_url) {
+                    const img = document.getElementById('qrisPreview');
+                    img.src = data.qris_image_url;
+                    img.style.display = 'block';
+                    document.getElementById('currentQrisUrl').value = data.qris_image_url;
+                }
             }
         }
 
         document.getElementById('bankForm').onsubmit = async (e) => {
             e.preventDefault();
-            const { error } = await _supabase
+            const btn = document.getElementById('btnSubmit');
+            btn.disabled = true;
+            btn.innerText = "Processing... / Memproses...";
+
+            const file = document.getElementById('qrisFile').files[0];
+            let imageUrl = document.getElementById('currentQrisUrl').value;
+
+            // 1. Jika ada file baru, upload ke Storage
+            if (file) {
+                const fileName = `qris_${Date.now()}`;
+                const { data, error: uploadError } = await _supabase.storage
+                    .from('bank-assets')
+                    .upload(fileName, file);
+
+                if (uploadError) {
+                    alert("Upload Failed: " + uploadError.message);
+                    btn.disabled = false;
+                    return;
+                }
+                
+                // Ambil Public URL
+                const { data: publicUrl } = _supabase.storage.from('bank-assets').getPublicUrl(fileName);
+                imageUrl = publicUrl.publicUrl;
+            }
+
+            // 2. Update Database
+            const { error: dbError } = await _supabase
                 .from('bank_settings')
                 .update({
-                    qris_data: document.getElementById('qris').value,
+                    qris_image_url: imageUrl,
                     paypal_email: document.getElementById('paypal').value,
                     mastervisa_account: document.getElementById('mastervisa').value,
                     updated_at: new Date()
                 })
                 .match({ id: (await _supabase.from('bank_settings').select('id').single()).data.id });
 
-            if (!error) alert("Data Updated & Distributed! / Data Berhasil Diperbarui!");
-            else alert("Error: " + error.message);
+            if (!dbError) {
+                alert("Data Distributed Successfully! / Data Berhasil Didistribusikan!");
+                location.reload();
+            } else {
+                alert("DB Error: " + dbError.message);
+            }
+            btn.disabled = false;
         };
 
-        loadBankSettings();
+        loadSettings();
     </script>
 </body>
 </html>
