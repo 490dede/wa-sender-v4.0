@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - WA-Sender v4.0</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <style>
+        body { font-family: sans-serif; padding: 20px; max-width: 480px; margin: auto; background-color: #f4f7f6; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px; }
+        .btn-admin { 
+            width: 100%; padding: 15px; background-color: #333; color: white; 
+            border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h2 style="text-align: center;">Halaman Login Admin / Admin Login Page</h2>
+
+    <form id="adminLoginForm">
+        <div class="form-group">
+            <label>email :</label>
+            <input type="email" id="email" placeholder="Admin Email / Surel Admin" required>
+        </div>
+
+        <div class="form-group">
+            <label>password :</label>
+            <input type="password" id="password" placeholder="Password / Kata Sandi" required>
+        </div>
+
+        <button type="submit" class="btn-admin">LOGIN ADMIN / MASUK ADMIN</button>
+    </form>
+
+    <script>
+        const _supabase = supabase.createClient('https://fdvjaulucahzmmmdwkau.supabase.co', 'sb_publishable_yN4AQrZGQEH8tzhkCsLf2g_KGoakIFa');
+
+        document.getElementById('adminLoginForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // 1. Auth Login
+            const { data: authData, error: authError } = await _supabase.auth.signInWithPassword({ email, password });
+
+            if (authError) return alert("Admin Login Failed / Login Admin Gagal: " + authError.message);
+
+            // 2. Verifikasi di Tabel admin_profiles
+            if (authData.user) {
+                const { data: admin, error: adminError } = await _supabase
+                    .from('admin_profiles')
+                    .select('role')
+                    .eq('id', authData.user.id)
+                    .single();
+
+                if (adminError || !admin) {
+                    await _supabase.auth.signOut();
+                    return alert("Access Denied / Akses Ditolak: Anda bukan Admin");
+                }
+
+                // 3. Redireksi Berdasarkan Role Admin
+                if (admin.role === 'admin-zero') {
+                    window.location.href = 'dashboard_admin_zero.html';
+                } else {
+                    window.location.href = 'dashboard_admin.html';
+                }
+            }
+        };
+    </script>
+</body>
+</html>
