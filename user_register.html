@@ -1,0 +1,92 @@
+// Struktur Komponen Register WA-Sender v4.0
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../../lib/supabaseClient';
+
+const Register = () => {
+  const [countries, setCountries] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState({ code: '', name: '' });
+
+  // 1. Ambil Data Negara dari Supabase untuk Dropdown
+  useEffect(() => {
+    const fetchCountries = async () => {
+      const { data } = await supabase.from('countries').select('*');
+      if (data) setCountries(data);
+    };
+    fetchCountries();
+  }, []);
+
+  return (
+    <div style={{ padding: '20px', maxWidth: '400px', margin: '0 auto', fontFamily: 'sans-serif' }}>
+      <h2 style={{ textAlign: 'center' }}>Halaman Register User / User Registration Page</h2>
+      
+      <form>
+        {/* Input Username & Email */}
+        <div style={{ marginBottom: '15px' }}>
+          <label>username :</label>
+          <input type="text" style={inputStyle} placeholder="Enter username / Masukkan username" />
+        </div>
+        
+        <div style={{ marginBottom: '15px' }}>
+          <label>email :</label>
+          <input type="email" style={inputStyle} placeholder="Enter email / Masukkan email" />
+        </div>
+
+        {/* Baris Kode Negara & Nomor Whatsapp (Horizontal Group) */}
+        <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
+          <select 
+            style={{ flex: '1', padding: '10px' }}
+            onChange={(e) => {
+              const res = countries.find(c => c.country_code === e.target.value);
+              setSelectedCountry({ code: res.country_code, name: res.country_name });
+            }}
+          >
+            <option value="">Code / Kode</option>
+            {countries.map(c => (
+              <option key={c.id} value={c.country_code}>{c.country_code}</option>
+            ))}
+          </select>
+          
+          <input 
+            type="number" 
+            style={{ flex: '3', padding: '10px' }} 
+            placeholder="WhatsApp Number / Nomor Whatsapp" 
+          />
+        </div>
+
+        {/* Nama Negara (Terisi Otomatis sesuai Pilihan Kode) */}
+        <div style={{ marginBottom: '15px' }}>
+          <input 
+            type="text" 
+            value={selectedCountry.name} 
+            readOnly 
+            style={{ ...inputStyle, backgroundColor: '#f0f0f0' }} 
+            placeholder="Country Name / Nama Negara"
+          />
+        </div>
+
+        <div style={{ marginBottom: '20px' }}>
+          <label>password :</label>
+          <input type="password" style={inputStyle} placeholder="Enter password / Masukkan kata sandi" />
+        </div>
+
+        {/* Tombol Simpan (Warna Hijau sesuai Desain) */}
+        <button style={buttonStyle}>
+          SIMPAN REGISTRASI & LOGIN / SAVE REGISTRATION & LOGIN
+        </button>
+      </form>
+
+      <p style={{ textAlign: 'center', marginTop: '15px', fontSize: '14px' }}>
+        Sudah punya akun? <a href="/login" style={{ color: 'purple' }}>Login disini / Login here</a>
+      </p>
+    </div>
+  );
+};
+
+// Styling Object untuk Mobile-First
+const inputStyle = { width: '100%', padding: '10px', marginTop: '5px', boxSizing: 'border-box' };
+const buttonStyle = { 
+  width: '100%', padding: '15px', backgroundColor: '#68a058', 
+  color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' 
+};
+
+export default Register;
