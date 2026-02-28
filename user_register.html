@@ -1,92 +1,118 @@
-// Struktur Komponen Register WA-Sender v4.0
-import React, { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabaseClient';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register User - WA-Sender v4.0</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <style>
+        /* Mobile First Styling - Spacing Urgent */
+        body { font-family: sans-serif; padding: 20px; max-width: 480px; margin: auto; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select { width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px; }
+        .row { display: flex; gap: 10px; }
+        .btn-submit { 
+            width: 100%; padding: 15px; background-color: #68a058; color: white; 
+            border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
 
-const Register = () => {
-  const [countries, setCountries] = useState([]);
-  const [selectedCountry, setSelectedCountry] = useState({ code: '', name: '' });
+    <h2 style="text-align: center;">Halaman Register User / User Registration Page</h2>
 
-  // 1. Ambil Data Negara dari Supabase untuk Dropdown
-  useEffect(() => {
-    const fetchCountries = async () => {
-      const { data } = await supabase.from('countries').select('*');
-      if (data) setCountries(data);
-    };
-    fetchCountries();
-  }, []);
-
-  return (
-    <div style={{ padding: '20px', maxWidth: '400px', margin: '0 auto', fontFamily: 'sans-serif' }}>
-      <h2 style={{ textAlign: 'center' }}>Halaman Register User / User Registration Page</h2>
-      
-      <form>
-        {/* Input Username & Email */}
-        <div style={{ marginBottom: '15px' }}>
-          <label>username :</label>
-          <input type="text" style={inputStyle} placeholder="Enter username / Masukkan username" />
-        </div>
-        
-        <div style={{ marginBottom: '15px' }}>
-          <label>email :</label>
-          <input type="email" style={inputStyle} placeholder="Enter email / Masukkan email" />
+    <form id="registerForm">
+        <div class="form-group">
+            <label>username :</label>
+            <input type="text" id="username" placeholder="Enter username / Masukkan username" required>
         </div>
 
-        {/* Baris Kode Negara & Nomor Whatsapp (Horizontal Group) */}
-        <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
-          <select 
-            style={{ flex: '1', padding: '10px' }}
-            onChange={(e) => {
-              const res = countries.find(c => c.country_code === e.target.value);
-              setSelectedCountry({ code: res.country_code, name: res.country_name });
-            }}
-          >
-            <option value="">Code / Kode</option>
-            {countries.map(c => (
-              <option key={c.id} value={c.country_code}>{c.country_code}</option>
-            ))}
-          </select>
-          
-          <input 
-            type="number" 
-            style={{ flex: '3', padding: '10px' }} 
-            placeholder="WhatsApp Number / Nomor Whatsapp" 
-          />
+        <div class="form-group">
+            <label>email :</label>
+            <input type="email" id="email" placeholder="Enter email / Masukkan email" required>
         </div>
 
-        {/* Nama Negara (Terisi Otomatis sesuai Pilihan Kode) */}
-        <div style={{ marginBottom: '15px' }}>
-          <input 
-            type="text" 
-            value={selectedCountry.name} 
-            readOnly 
-            style={{ ...inputStyle, backgroundColor: '#f0f0f0' }} 
-            placeholder="Country Name / Nama Negara"
-          />
+        <div class="form-group row">
+            <div style="flex: 1;">
+                <select id="countryCode" required>
+                    <option value="">Code</option>
+                </select>
+            </div>
+            <div style="flex: 3;">
+                <input type="number" id="whatsapp" placeholder="WhatsApp Number / Nomor Whatsapp" required>
+            </div>
         </div>
 
-        <div style={{ marginBottom: '20px' }}>
-          <label>password :</label>
-          <input type="password" style={inputStyle} placeholder="Enter password / Masukkan kata sandi" />
+        <div class="form-group">
+            <input type="text" id="countryName" placeholder="Country Name / Nama Negara" readonly style="background: #f0f0f0;">
         </div>
 
-        {/* Tombol Simpan (Warna Hijau sesuai Desain) */}
-        <button style={buttonStyle}>
-          SIMPAN REGISTRASI & LOGIN / SAVE REGISTRATION & LOGIN
-        </button>
-      </form>
+        <div class="form-group">
+            <label>password :</label>
+            <input type="password" id="password" placeholder="Enter password / Masukkan kata sandi" required>
+        </div>
 
-      <p style={{ textAlign: 'center', marginTop: '15px', fontSize: '14px' }}>
-        Sudah punya akun? <a href="/login" style={{ color: 'purple' }}>Login disini / Login here</a>
-      </p>
-    </div>
-  );
-};
+        <button type="submit" class="btn-submit">SIMPAN REGISTRASI & LOGIN / SAVE REGISTRATION & LOGIN</button>
+    </form>
 
-// Styling Object untuk Mobile-First
-const inputStyle = { width: '100%', padding: '10px', marginTop: '5px', boxSizing: 'border-box' };
-const buttonStyle = { 
-  width: '100%', padding: '15px', backgroundColor: '#68a058', 
-  color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' 
-};
+    <p style="text-align: center; margin-top: 20px;">
+        Sudah punya akun? <a href="user_login.html" style="color: purple;">Login disini / Login here</a>
+    </p>
 
-export default Register;
+    <script>
+        // Inisialisasi Supabase (Ganti dengan URL & KEY milikmu)
+        const _supabase = supabase.createClient('YOUR_SUPABASE_URL', 'YOUR_SUPABASE_KEY');
+
+        // 1. Load Dropdown Negara
+        async function loadCountries() {
+            const { data } = await _supabase.from('countries').select('*');
+            const select = document.getElementById('countryCode');
+            data.forEach(c => {
+                let opt = document.createElement('option');
+                opt.value = c.country_code;
+                opt.text = c.country_code;
+                opt.setAttribute('data-name', c.country_name);
+                select.appendChild(opt);
+            });
+        }
+
+        // 2. Update Nama Negara Otomatis
+        document.getElementById('countryCode').onchange = function() {
+            const selected = this.options[this.selectedIndex];
+            document.getElementById('countryName').value = selected.getAttribute('data-name') || '';
+        };
+
+        // 3. handleRegister (Logika Pengiriman Data)
+        document.getElementById('registerForm').onsubmit = async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Step A: Register ke Auth
+            const { data: authData, error: authError } = await _supabase.auth.signUp({ email, password });
+
+            if (authError) return alert("Error: " + authError.message);
+
+            // Step B: Simpan ke user_profiles
+            if (authData.user) {
+                const { error: profileError } = await _supabase.from('user_profiles').insert([{
+                    id: authData.user.id,
+                    username: document.getElementById('username').value,
+                    email: email,
+                    kode_negara: document.getElementById('countryCode').value,
+                    nomor_whatsapp: document.getElementById('whatsapp').value,
+                    nama_negara: document.getElementById('countryName').value,
+                    kategori_user: 'Trial', // Kunci Otomatis [cite: 88]
+                    status_user: 'Aktif'    // Kunci Otomatis [cite: 82]
+                }]);
+
+                if (!profileError) alert("Registration Success / Registrasi Berhasil!");
+            }
+        };
+
+        loadCountries();
+    </script>
+</body>
+</html>
