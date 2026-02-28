@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin-Zero - WA-Sender v4.0</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <style>
+        body { font-family: sans-serif; margin: 0; background: #f4f7f6; }
+        .sidebar { width: 250px; height: 100vh; background: #333; color: white; position: fixed; padding: 20px; box-sizing: border-box; }
+        .content { margin-left: 250px; padding: 20px; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background: #eee; }
+        .btn { padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; color: white; }
+        .btn-add { background: #68a058; }
+        .btn-bank { background: #f39c12; width: 100%; margin-top: 10px; }
+        .btn-delete { background: #e74c3c; padding: 5px 10px; }
+        @media (max-width: 600px) {
+            .sidebar { width: 100%; height: auto; position: relative; }
+            .content { margin-left: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h3>Admin-Zero Panel</h3>
+        <p>Email: adeali490@gmail.com</p>
+        <hr>
+        <button class="btn btn-bank" onclick="location.href='setting_bank.html'">
+            SETTING BANK (QRIS & PAYPAL)
+        </button>
+        <button class="btn btn-bank" style="background:#c0392b; margin-top:50px;" onclick="handleLogout()">
+            LOGOUT / KELUAR
+        </button>
+    </div>
+
+    <div class="content">
+        <h2>Dashboard Admin-Zero / Panel Utama</h2>
+
+        <div class="card">
+            <h3>Manajemen Negara / Country Management</h3>
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <input type="text" id="newCode" placeholder="Code (e.g. +62)" style="padding: 10px; flex: 1;">
+                <input type="text" id="newName" placeholder="Country Name" style="padding: 10px; flex: 2;">
+                <button class="btn btn-add" onclick="addCountry()">ADD / TAMBAH</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code / Kode</th>
+                        <th>Country / Negara</th>
+                        <th>Action / Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="countryTableBody"></tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h3>Daftar User / User List (View Only)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>WhatsApp</th>
+                        <th>Category / Kategori</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const _supabase = supabase.createClient('https://fdvjaulucahzmmmdwkau.supabase.co', 'sb_publishable_yN4AQrZGQEH8tzhkCsLf2g_KGoakIFa');
+
+        // 1. Load Data Negara
+        async function loadCountries() {
+            const { data } = await _supabase.from('countries').select('*').order('country_name');
+            const tbody = document.getElementById('countryTableBody');
+            tbody.innerHTML = data.map(c => `
+                <tr>
+                    <td>${c.country_code}</td>
+                    <td>${c.country_name}</td>
+                    <td><button class="btn btn-delete" onclick="deleteCountry('${c.id}')">Delete</button></td>
+                </tr>
+            `).join('');
+        }
+
+        // 2. Tambah Negara
+        async function addCountry() {
+            const code = document.getElementById('newCode').value;
+            const name = document.getElementById('newName').value;
+            if(!code || !name) return alert("Fill all fields / Isi semua kolom");
+            
+            await _supabase.from('countries').insert([{ country_code: code, country_name: name }]);
+            location.reload();
+        }
+
+        // 3. Hapus Negara
+        async function deleteCountry(id) {
+            if(confirm("Are you sure? / Yakin ingin menghapus?")) {
+                await _supabase.from('countries').delete().eq('id', id);
+                loadCountries();
+            }
+        }
+
+        // 4. Load Data User (View Only)
+        async function loadUsers() {
+            const { data } = await _supabase.from('user_profiles').select('*');
+            const tbody = document.getElementById('userTableBody');
+            tbody.innerHTML = data.map(u => `
+                <tr>
+                    <td>${u.username}</td>
+                    <td>${u.kode_negara}${u.nomor_whatsapp}</td>
+                    <td>${u.kategori_user}</td>
+                    <td>${u.status_user}</td>
+                </tr>
+            `).join('');
+        }
+
+        async function handleLogout() {
+            await _supabase.auth.signOut();
+            window.location.href = 'admin_login.html';
+        }
+
+        loadCountries();
+        loadUsers();
+    </script>
+</body>
+</html>
