@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login User - WA-Sender v4.0</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <style>
+        body { font-family: sans-serif; padding: 20px; max-width: 480px; margin: auto; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px; }
+        .btn-login { 
+            width: 100%; padding: 15px; background-color: #4A90E2; color: white; 
+            border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h2 style="text-align: center;">Halaman Login User / User Login Page</h2>
+
+    <form id="loginForm">
+        <div class="form-group">
+            <label>email :</label>
+            <input type="email" id="email" placeholder="Enter email / Masukkan email" required>
+        </div>
+
+        <div class="form-group">
+            <label>password :</label>
+            <input type="password" id="password" placeholder="Enter password / Masukkan kata sandi" required>
+        </div>
+
+        <button type="submit" class="btn-login">LOGIN / MASUK</button>
+    </form>
+
+    <p style="text-align: center; margin-top: 20px;">
+        Belum punya akun? <a href="user_register.html" style="color: purple;">Daftar disini / Register here</a>
+    </p>
+
+    <script>
+        // Inisialisasi menggunakan kredensial yang Anda berikan
+        const _supabase = supabase.createClient('https://fdvjaulucahzmmmdwkau.supabase.co', 'sb_publishable_yN4AQrZGQEH8tzhkCsLf2g_KGoakIFa');
+
+        document.getElementById('loginForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // 1. Proses Login Auth
+            const { data: authData, error: authError } = await _supabase.auth.signInWithPassword({ email, password });
+
+            if (authError) {
+                return alert("Login Failed / Login Gagal: " + authError.message);
+            }
+
+            // 2. Ambil Data Profil untuk Cek Kategori & Status
+            if (authData.user) {
+                const { data: profile, error: profileError } = await _supabase
+                    .from('user_profiles')
+                    .select('kategori_user, status_user')
+                    .eq('id', authData.user.id)
+                    .single();
+
+                if (profileError || !profile) {
+                    return alert("Profile not found / Profil tidak ditemukan");
+                }
+
+                // 3. Logika Redireksi Berdasarkan Status & Kategori
+                if (profile.status_user === 'Tidak Aktif') {
+                    window.location.href = 'dashboard_tidak_aktif.html';
+                } else {
+                    const kategori = profile.kategori_user;
+                    if (kategori === 'Trial') window.location.href = 'dashboard_trial.html';
+                    else if (kategori === 'Pro') window.location.href = 'dashboard_pro.html';
+                    else if (kategori === 'Multi') window.location.href = 'dashboard_multi.html';
+                    else if (kategori === 'Team') window.location.href = 'dashboard_team.html';
+                }
+            }
+        };
+    </script>
+</body>
+</html>
