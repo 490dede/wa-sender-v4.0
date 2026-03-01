@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Editor - Admin Only</title>
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <style>
+        body { font-family: sans-serif; padding: 15px; background: #f9f9f9; }
+        .editor-container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 15px; }
+        label { font-weight: bold; display: block; margin-bottom: 5px; }
+        select, input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        #editor { height: 200px; margin-bottom: 20px; }
+        .btn-post { width: 100%; padding: 15px; background: #68a058; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="editor-container">
+        <h2>Buat Postingan Baru / Create New Post</h2>
+        
+        <div class="form-group">
+            <label>Target Negara / Target Country:</label>
+            <select id="targetCountry">
+                <option value="All">Semua Negara / All Countries</option>
+                </select>
+        </div>
+
+        <div class="form-group">
+            <label>Tipe Postingan / Post Type:</label>
+            <select id="postType">
+                <option value="Banner">Static Banner (Bawah Header)</option>
+                <option value="Pop-up">Pop-up Notifikasi</option>
+                <option value="Paket">POSTING PAKET LANGGANAN</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Upload Gambar / Image (Opsional):</label>
+            <input type="file" id="postImage" accept="image/*">
+        </div>
+
+        <div class="form-group">
+            <label>Konten Postingan / Post Content:</label>
+            <div id="editor"></div>
+        </div>
+
+        <button class="btn-post" onclick="submitPost()">PUBLIKASIKAN / PUBLISH POST</button>
+    </div>
+
+    <script>
+        const _supabase = supabase.createClient('https://fdvjaulucahzmmmdwkau.supabase.co', 'sb_publishable_yN4AQrZGQEH8tzhkCsLf2g_KGoakIFa');
+        
+        // Inisialisasi Quill
+        const quill = new Quill('#editor', { theme: 'snow' });
+
+        // Load Negara untuk Filter
+        async function loadCountries() {
+            const { data } = await _supabase.from('countries').select('*');
+            const select = document.getElementById('targetCountry');
+            data.forEach(c => {
+                let opt = document.createElement('option');
+                opt.value = c.country_code;
+                opt.text = `${c.country_name} (${c.country_code})`;
+                select.appendChild(opt);
+            });
+        }
+
+        async function submitPost() {
+            const content = quill.root.innerHTML;
+            const country = document.getElementById('targetCountry').value;
+            const type = document.getElementById('postType').value;
+            const file = document.getElementById('postImage').files[0];
+            
+            let imageUrl = '';
+            if (file) {
+                const fileName = `post_${Date.now()}`;
+                await _supabase.storage.from('bank-assets').upload(fileName, file);
+                const { data } = _supabase.storage.from('bank-assets').getPublicUrl(fileName);
+                imageUrl = data.publicUrl;
+            }
+
+            const { error } = await _supabase.from('announcements').insert([{
+                target_country: country,
+                post_type: type,
+                content_html: content,
+                image_url: imageUrl,
+                is_active: true
+            }]);
+
+            if (!error) {
+                alert("Postingan Berhasil Disebarkan!");
+                location.reload();
+            }
+        }
+
+        loadCountries();
+    </script>
+</body>
+</html>
