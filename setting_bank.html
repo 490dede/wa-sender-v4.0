@@ -1,120 +1,158 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Setting Bank - Admin-Zero Only</title>
+    <title>Bank Setting - WA-Sender v4.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <style>
-        body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; background: #fdfdfd; }
-        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: bold; color: #333; }
-        input, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
-        .preview-img { width: 100%; max-height: 250px; object-fit: contain; margin-top: 10px; border: 1px dashed #ccc; display: none; }
-        .btn-save { width: 100%; padding: 15px; background: #f39c12; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .header-box { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #f39c12; padding-bottom: 10px; }
+        :root {
+            --bg-page: #f4f7f6; /* Warna terang meredam kontras sesuai revisi */
+            --primary: #4A90E2;
+            --danger: #e74c3c;
+            --text-dark: #333;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background: var(--bg-page);
+            color: var(--text-dark);
+            display: none; /* Disembunyikan sampai verifikasi Owner selesai */
+        }
+
+        header {
+            background: var(--white);
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .menu-btn { font-size: 24px; cursor: pointer; background: none; border: none; margin-right: 15px; }
+        .container { padding: 20px; }
+        
+        .card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 11px; /* Font size diturunkan sesuai revisi */
+            font-style: italic; /* Judul kolom italic sesuai revisi */
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .input-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+
+        .btn-update {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .owner-badge {
+            background: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            margin-bottom: 20px;
+            border: 1px solid #ffeeba;
+            text-align: center;
+        }
+
+        .sidenav {
+            height: 100%; width: 0; position: fixed; z-index: 1000; top: 0; left: 0;
+            background-color: var(--white); overflow-x: hidden; transition: 0.3s; 
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        .sidenav a { padding: 15px 25px; text-decoration: none; font-size: 15px; color: #444; display: block; border-bottom: 1px solid #f9f9f9; }
     </style>
 </head>
 <body>
 
-    <div class="header-box">
-        <h2>SETTING BANK & REVENUE</h2>
-        <p>Admin-Zero Exclusive Access (adeali490@gmail.com)</p>
+<div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" onclick="closeNav()" style="padding: 20px; text-align: right; font-size: 30px;">&times;</a>
+    <a href="dashboard_admin_zero.html">📊 Dashboard Zero</a>
+    <a href="admin_management.html">🔑 Manage Admin</a>
+    <a href="setting_bank.html" style="font-weight:600; color:var(--primary);">🏦 Bank & QRIS</a>
+    <a href="post_editor_zero.html">📝 Post Editor (Zero)</a>
+</div>
+
+<header>
+    <button class="menu-btn" onclick="openNav()">☰</button>
+    <div style="font-weight:600;">WA-Sender v4.0</div>
+</header>
+
+<div class="container">
+    <div class="owner-badge">
+        <b>Admin-Zero Exclusive Access</b><br>
+        Hanya akun utama yang dapat mengelola data perbankan.
     </div>
 
+    <h3 style="font-size: 16px; margin: 0 0 20px;">PENGATURAN BANK & QRIS</h3>
+    
     <div class="card">
-        <form id="bankForm">
-            <div class="form-group">
-                <label>Upload Barcode QRIS (Image/Gambar):</label>
-                <input type="file" id="qrisFile" accept="image/*">
-                <img id="qrisPreview" class="preview-img">
-                <input type="hidden" id="currentQrisUrl">
-            </div>
+        <label class="form-label">Upload Barcode QRIS (Image/Gambar):</label>
+        <input type="file" class="input-control" accept="image/*">
 
-            <div class="form-group">
-                <label>PayPal Account (Email):</label>
-                <input type="email" id="paypal" placeholder="example@paypal.com">
-            </div>
+        <label class="form-label">PayPal Account (Email):</label>
+        <input type="email" class="input-control" placeholder="example@paypal.com">
 
-            <div class="form-group">
-                <label>Rekening Bank MasterVisa (Text):</label>
-                <textarea id="mastervisa" rows="3" placeholder="Nama Bank - No Rekening - Atas Nama"></textarea>
-            </div>
+        <label class="form-label">Rekening Bank / MasterVisa (Text):</label>
+        <textarea class="input-control" style="height: 100px;" placeholder="Nama Bank - No Rekening - Atas Nama"></textarea>
 
-            <button type="submit" id="btnSubmit" class="btn-save">UPDATE & DISTRIBUTE TO ADMIN</button>
-        </form>
-        <button onclick="location.href='dashboard_admin_zero.html'" style="margin-top:15px; width:100%; background:none; border:none; color:gray; cursor:pointer;">
-            Back to Dashboard / Kembali
-        </button>
+        <button class="btn-update">UPDATE & DISTRIBUTE TO ADMIN</button>
     </div>
+</div>
 
-    <script>
-        const _supabase = supabase.createClient('https://fdvjaulucahzmmmdwkau.supabase.co', 'sb_publishable_yN4AQrZGQEH8tzhkCsLf2g_KGoakIFa');
-
-        // Load data lama & Tampilkan Preview
-        async function loadSettings() {
-            const { data } = await _supabase.from('bank_settings').select('*').single();
-            if (data) {
-                document.getElementById('paypal').value = data.paypal_email || '';
-                document.getElementById('mastervisa').value = data.mastervisa_account || '';
-                if(data.qris_image_url) {
-                    const img = document.getElementById('qrisPreview');
-                    img.src = data.qris_image_url;
-                    img.style.display = 'block';
-                    document.getElementById('currentQrisUrl').value = data.qris_image_url;
-                }
-            }
+<script>
+    // LOGIKA OWNER ONLY
+    const OWNER_EMAIL = "adeali490@gmail.com"; 
+    
+    // Simulasi pengecekan sesi login (Ganti dengan sesi real dari Supabase Auth Anda)
+    function checkOwnerAccess() {
+        const userEmail = localStorage.getItem('logged_in_email'); // Contoh pengambilan email login
+        
+        if (userEmail !== OWNER_EMAIL) {
+            alert("Akses Ditolak! Halaman ini hanya untuk Owner.");
+            window.location.href = "dashboard_admin.html"; // Lempar balik ke dashboard biasa
+        } else {
+            document.body.style.display = "block"; // Tampilkan halaman jika email cocok
         }
+    }
 
-        document.getElementById('bankForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('btnSubmit');
-            btn.disabled = true;
-            btn.innerText = "Processing... / Memproses...";
+    function openNav() { document.getElementById("mySidenav").style.width = "280px"; }
+    function closeNav() { document.getElementById("mySidenav").style.width = "0"; }
 
-            const file = document.getElementById('qrisFile').files[0];
-            let imageUrl = document.getElementById('currentQrisUrl').value;
-
-            // 1. Jika ada file baru, upload ke Storage
-            if (file) {
-                const fileName = `qris_${Date.now()}`;
-                const { data, error: uploadError } = await _supabase.storage
-                    .from('bank-assets')
-                    .upload(fileName, file);
-
-                if (uploadError) {
-                    alert("Upload Failed: " + uploadError.message);
-                    btn.disabled = false;
-                    return;
-                }
-                
-                // Ambil Public URL
-                const { data: publicUrl } = _supabase.storage.from('bank-assets').getPublicUrl(fileName);
-                imageUrl = publicUrl.publicUrl;
-            }
-
-            // 2. Update Database
-            const { error: dbError } = await _supabase
-                .from('bank_settings')
-                .update({
-                    qris_image_url: imageUrl,
-                    paypal_email: document.getElementById('paypal').value,
-                    mastervisa_account: document.getElementById('mastervisa').value,
-                    updated_at: new Date()
-                })
-                .match({ id: (await _supabase.from('bank_settings').select('id').single()).data.id });
-
-            if (!dbError) {
-                alert("Data Distributed Successfully! / Data Berhasil Didistribusikan!");
-                location.reload();
-            } else {
-                alert("DB Error: " + dbError.message);
-            }
-            btn.disabled = false;
-        };
-
-        loadSettings();
-    </script>
+    // Jalankan proteksi saat halaman dimuat
+    window.onload = checkOwnerAccess;
+</script>
 </body>
 </html>
