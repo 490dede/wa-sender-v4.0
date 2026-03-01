@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revenue Tracking - WA-Sender v4.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <style>
+        :root { --bg-page: #f4f7f6; --primary: #4A90E2; --text-dark: #333; --white: #ffffff; --accent: #8e44ad; }
+        body { font-family: 'Inter', sans-serif; margin: 0; background: var(--bg-page); color: var(--text-dark); }
+        header { background: var(--white); padding: 15px; display: flex; align-items: center; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 100; }
+        .menu-btn { font-size: 24px; cursor: pointer; background: none; border: none; margin-right: 15px; }
+        .container { padding: 20px; }
+        .card-stat { background: var(--accent); color: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; text-align: center; }
+        .form-label { display: block; font-size: 13px; font-style: italic; color: #555; margin-bottom: 8px; }
+        .input-control { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px; box-sizing: border-box; }
+        .history-card { background: var(--white); padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid var(--accent); }
+        .sidenav { height: 100%; width: 0; position: fixed; z-index: 1000; top: 0; left: 0; background-color: var(--white); overflow-x: hidden; transition: 0.3s; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
+        .sidenav a { padding: 15px 25px; text-decoration: none; font-size: 15px; color: #444; display: block; border-bottom: 1px solid #f9f9f9; }
+    </style>
+</head>
+<body>
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" onclick="closeNav()" style="font-size:30px; text-align:right;">&times;</a>
+        <a href="dashboard_admin.html">📊 Dashboard</a>
+        <a href="post_editor_staff.html">📝 Post Editor</a>
+        <a href="admin_revenue.html" style="font-weight:600; color:var(--primary);">💰 Revenue Tracking</a>
+        <a href="admin_chat_bantuan.html">💬 Chat Bantuan</a>
+    </div>
+    <header><button class="menu-btn" onclick="openNav()">☰</button><div style="font-weight:600;">WA-Sender v4.0</div></header>
+    <div class="container">
+        <div class="card-stat">
+            <div style="font-size: 12px; opacity: 0.8;">ESTIMASI PENDAPATAN</div>
+            <div style="font-size: 24px; font-weight: 600; margin-top: 5px;">Rp 0</div>
+        </div>
+        <label class="form-label">Filter Rentang Tanggal:</label>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <input type="date" class="input-control">
+            <input type="date" class="input-control">
+        </div>
+        <div style="font-size: 14px; font-weight: 600; margin: 20px 0 10px; color: var(--accent);">HISTORI PERUBAHAN HARGA & PROMO</div>
+        <div id="revenue-list"><p style="font-size: 12px; color: #999;">Memuat data aktivitas...</p></div>
+    </div>
+    <script>
+        function openNav() { document.getElementById("mySidenav").style.width = "280px"; }
+        function closeNav() { document.getElementById("mySidenav").style.width = "0"; }
+    </script>
+</body>
+</html>
