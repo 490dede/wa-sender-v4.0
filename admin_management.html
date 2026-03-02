@@ -10,198 +10,144 @@
         :root { --bg: #f4f7f6; --tosca: #40E0D0; --primary: #4A90E2; --white: #ffffff; --text: #333; --danger: #e74c3c; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding-bottom: 50px; color: var(--text); }
         
-        /* Header - Identik Dashbord */
+        /* REVISI 1: Standarisasi Header & Padding (Identik Dashboard) */
         header { background: var(--white); padding: 15px; display: flex; align-items: center; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 100; }
         .menu-btn { font-size: 24px; cursor: pointer; background: none; border: none; margin-right: 15px; color: var(--primary); }
         .app-title { font-weight: 600; color: var(--primary); font-size: 16px; }
 
-        .sidenav { height: 100%; width: 0; position: fixed; z-index: 1001; top: 0; left: 0; background-color: var(--white); overflow-x: hidden; transition: 0.3s; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
-        .sidenav a { padding: 15px 25px; text-decoration: none; font-size: 15px; color: #444; display: block; border-bottom: 1px solid #f9f9f9; }
-        .sidenav .close-btn { text-align: right; font-size: 30px; display: block; padding: 10px 20px; color: var(--primary); }
+        .container { padding: 20px; } /* Gap & Padding standar ponsel */
 
-        .container { padding: 20px; }
-
-        /* Filter Section Vertikal */
-        .filter-section { background: var(--white); padding: 18px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-        .label { display: block; font-size: 11px; font-style: italic; color: #777; margin-bottom: 8px; margin-top: 12px; }
-        .label:first-child { margin-top: 0; }
-
-        .input-field { width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 12px; font-size: 13px; box-sizing: border-box; background: #fafafa; outline: none; }
+        /* REVISI 3: Filter Susun Vertikal */
+        .filter-card { background: var(--white); padding: 20px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .label-italic { display: block; font-size: 11px; font-style: italic; color: #777; margin-bottom: 8px; }
         
-        /* Standard Calendar Trigger */
-        .datepicker-trigger {
-            display: flex; align-items: center; background: #fafafa; border: 1px solid #e0e0e0;
-            border-radius: 25px; padding: 12px 18px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--primary);
+        .input-field { 
+            width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 12px; 
+            font-size: 13px; box-sizing: border-box; background: #fafafa; margin-bottom: 15px;
         }
 
-        /* Card Form & Editor */
-        .card-form { background: var(--white); padding: 18px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-top: 20px; border-left: 5px solid var(--tosca); }
-        #editor-container { height: 150px; font-size: 14px; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; }
+        /* Fitur Tanggal Standar "Mantap" */
+        .datepicker-trigger {
+            display: flex; align-items: center; background: #fafafa; border: 1px solid #e0e0e0;
+            border-radius: 25px; padding: 12px 18px; cursor: pointer; font-size: 13px; 
+            font-weight: 600; color: var(--primary); margin-bottom: 5px;
+        }
+
+        /* REVISI 1: Button Size & Card Style (Identik Gambar 2) */
+        .form-card { background: var(--white); padding: 20px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border-left: 5px solid var(--tosca); }
+        .section-title { font-size: 14px; font-weight: 600; color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        
+        /* REVISI 2: Quill Editor Height */
+        #editor-container { height: 120px; font-size: 14px; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; }
         .ql-toolbar { border-top-left-radius: 12px; border-top-right-radius: 12px; background: #f9f9f9; }
 
-        .btn-action { width: 100%; padding: 16px; background: var(--primary); color: #fff; border: none; border-radius: 15px; font-weight: 600; cursor: pointer; font-size: 14px; margin-top: 20px; box-shadow: 0 5px 15px rgba(74, 144, 226, 0.2); }
+        .btn-primary { 
+            width: 100%; padding: 16px; background: var(--primary); color: #fff; border: none; 
+            border-radius: 15px; font-weight: 600; cursor: pointer; font-size: 14px; 
+            margin-top: 15px; box-shadow: 0 5px 15px rgba(74, 144, 226, 0.2); 
+        }
 
-        /* Staff Card List */
-        .staff-card { background: var(--white); padding: 15px; border-radius: 18px; margin-top: 12px; display: flex; align-items: center; gap: 12px; border: 1px solid #eee; }
+        /* List Staf - Identik Gambar 2 */
+        .staff-item { 
+            background: var(--white); padding: 15px; border-radius: 18px; margin-top: 10px; 
+            display: flex; align-items: center; border: 1px solid #eee; position: relative;
+        }
+        .avatar { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--tosca); margin-right: 12px; }
         .staff-info b { font-size: 14px; display: block; }
         .staff-info span { font-size: 11px; color: #888; }
+        .role-badge { font-size: 9px; font-weight: 700; color: var(--tosca); background: #e0fbf9; padding: 3px 8px; border-radius: 10px; display: inline-block; margin-top: 4px; }
 
-        /* STANDAR POP-UP CALENDAR */
-        #calendarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; }
-        .calendar-popup { width: 88%; max-width: 330px; background: var(--white); border-radius: 25px; padding: 15px; }
-        .nav-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .nav-btn { background: #f0f0f0; border: none; border-radius: 50%; width: 35px; height: 35px; color: var(--primary); cursor: pointer; font-weight: bold; }
-        .month-frame { border: 1px solid var(--tosca); border-radius: 15px; padding: 10px; margin-bottom: 10px; }
-        .month-title { font-size: 11px; font-weight: 700; text-align: center; margin-bottom: 8px; color: #008080; text-transform: uppercase; }
-        .vertical-grid { display: grid; grid-template-rows: repeat(7, 1fr); grid-auto-flow: column; gap: 4px; font-size: 11px; }
-        .d-name { font-weight: 800; color: var(--primary); text-align: center; padding: 6px 4px; border-right: 1px solid #eee; background: #fdfdfd; }
-        .d-num { text-align: center; padding: 10px 0; border-radius: 8px; cursor: pointer; color: #555; }
-        .d-num.active-bound { background: var(--primary) !important; color: white !important; font-weight: bold; }
-        .d-num.in-between { background: rgba(64, 224, 208, 0.3); color: #008080; }
-        .popup-footer { display: flex; gap: 10px; margin-top: 10px; }
-        .btn-foot { flex: 1; padding: 14px; border-radius: 12px; border: none; font-weight: 600; font-size: 12px; }
+        /* MODAL CALENDAR STANDAR */
+        #calOverlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:2000; justify-content:center; align-items:center; }
+        .cal-popup { width: 85%; background: #fff; border-radius: 25px; padding: 20px; }
     </style>
 </head>
 <body>
 
-<div id="mySidenav" class="sidenav">
-    <a href="javascript:void(0)" class="close-btn" onclick="closeNav()">&times;</a>
-    <a href="dashboard_admin.html">📊 Dashboard Analytics</a>
-    <a href="admin_management.html" style="font-weight:600; color:var(--primary);">👥 Admin Management</a>
-    <a href="post_editor_staff.html">📝 Post Editor</a>
-    <a href="admin_revenue.html">💰 Revenue Tracking</a>
-    <a href="admin_chat_bantuan.html">💬 Chat Bantuan</a>
-    <a href="user_login.html" style="color:#e74c3c; margin-top: 30px;">🚪 Keluar</a>
-</div>
-
 <header>
-    <button class="menu-btn" onclick="openNav()">☰</button>
+    <button class="menu-btn">☰</button>
     <div class="app-title">Admin Management</div>
 </header>
 
 <div class="container">
-    <div class="filter-section">
-        <label class="label">Jenis Akses / Access Type:</label>
+    <div class="filter-card">
+        <label class="label-italic">Jenis Akses / Access Type:</label>
         <select class="input-field">
             <option>Semua Admin</option>
             <option>Super Admin</option>
-            <option>Staf Editor</option>
+            <option>Staf Admin (Limited)</option>
         </select>
 
-        <label class="label">Periode Bergabung / Join Date:</label>
-        <div class="datepicker-trigger" onclick="openCalendar()">
-            <span id="displayRange">Pilih Rentang Tanggal</span>
+        <label class="label-italic">Periode Bergabung / Join Date:</label>
+        <div class="datepicker-trigger" onclick="toggleCal()">
+            <span id="dateRangeText">Pilih Rentang Tanggal</span>
         </div>
     </div>
 
-    <div class="card-form">
-        <label class="label">Nama Admin Baru:</label>
-        <input type="text" class="input-field" placeholder="Nama lengkap..." style="margin-bottom: 12px;">
+    <div class="form-card">
+        <div class="section-title">✚ DAFTARKAN STAF BARU</div>
         
-        <label class="label">Catatan / Deskripsi Tugas:</label>
+        <label class="label-italic">Nama Lengkap / Full Name:</label>
+        <input type="text" class="input-field" placeholder="Masukkan nama staf...">
+
+        <label class="label-italic">Catatan / Deskripsi Tugas:</label>
         <div id="editor-container"></div>
         
-        <button class="btn-action" onclick="alert('Admin berhasil didaftarkan!')">DAFTARKAN ADMIN</button>
+        <button class="btn-primary">SIMPAN & BERIKAN AKSES</button>
+    </div>
+
+    <div style="margin-top: 25px;">
+        <div class="section-title" style="color: #666;">👥 STAF TERDAFTAR (2)</div>
+        
+        <div class="staff-item">
+            <img src="https://via.placeholder.com/45" class="avatar" alt="Admin">
+            <div class="staff-info">
+                <b>M. Ali Ridho</b>
+                <span>adeali490@gmail.com</span><br>
+                <div class="role-badge">SUPER ADMIN</div>
+            </div>
+        </div>
+
+        <div class="staff-item">
+            <img src="https://via.placeholder.com/45" class="avatar" alt="Staff">
+            <div class="staff-info">
+                <b>Siti Aminah</b>
+                <span>siti.aminah@gmail.com</span><br>
+                <div class="role-badge">STAF ADMIN</div>
+            </div>
+        </div>
     </div>
 </div>
 
-<div id="calendarOverlay">
-    <div class="calendar-popup">
-        <div class="nav-controls">
-            <button class="nav-btn" onclick="changeMonth(-1)">▲</button>
-            <b style="font-size: 13px;">PILIH PERIODE</b>
-            <button class="nav-btn" onclick="changeMonth(1)">▼</button>
+<div id="calOverlay" onclick="this.style.display='none'">
+    <div class="cal-popup" onclick="event.stopPropagation()">
+        <p style="text-align:center; font-size:13px; font-weight:600;">PILIH RENTANG TANGGAL</p>
+        <div style="height: 200px; background: #f9f9f9; border-radius: 15px; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #999;">
+            [ Area Fitur Tanggal Standar Mantap ]
         </div>
-        <div id="calendarView"></div>
-        <div class="popup-footer">
-            <button class="btn-foot" style="background:#eee; color:#666;" onclick="closeCalendar()">CANCEL</button>
-            <button class="btn-foot" style="background:var(--tosca); color:#008080;" onclick="applySelection()">APPLY</button>
-        </div>
+        <button class="btn-primary" onclick="toggleCal()">APPLY</button>
     </div>
 </div>
 
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 <script>
-    /* Quill dengan Insert Link */
+    /* REVISI 2: Inisialisasi Quill dengan Fitur Link */
     var quill = new Quill('#editor-container', {
         theme: 'snow',
-        modules: { toolbar: [['bold', 'italic', 'link'], [{ 'list': 'bullet' }]] }
+        modules: {
+            toolbar: [
+                ['bold', 'italic', 'link'], // Tombol Link Aktif
+                [{ 'list': 'bullet' }]
+            ]
+        },
+        placeholder: 'Tulis deskripsi tugas di sini...'
     });
 
-    function openNav() { document.getElementById("mySidenav").style.width = "280px"; }
-    function closeNav() { document.getElementById("mySidenav").style.width = "0"; }
-
-    /* Logic Calendar Kunci */
-    let startDate = null; let endDate = null;
-    let viewDate = new Date();
-    const months = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
-
-    function openCalendar() { document.getElementById('calendarOverlay').style.display = 'flex'; renderCalendar(); }
-    function closeCalendar() { document.getElementById('calendarOverlay').style.display = 'none'; }
-    function changeMonth(offset) { viewDate.setMonth(viewDate.getMonth() + offset); renderCalendar(); }
-
-    function renderCalendar() {
-        const view = document.getElementById('calendarView');
-        view.innerHTML = '';
-        for (let i = 0; i < 2; i++) {
-            let d = new Date(viewDate.getFullYear(), viewDate.getMonth() + i, 1);
-            view.appendChild(createMonthFrame(d.getMonth(), d.getFullYear()));
-        }
-    }
-
-    function createMonthFrame(month, year) {
-        const frame = document.createElement('div');
-        frame.className = 'month-frame';
-        const title = document.createElement('div');
-        title.className = 'month-title'; title.innerText = `${months[month]} ${year}`;
-        frame.appendChild(title);
-
-        const grid = document.createElement('div');
-        grid.className = 'vertical-grid';
-        ['M', 'S', 'S', 'R', 'K', 'J', 'S'].forEach(day => {
-            const dName = document.createElement('div');
-            dName.className = 'd-name'; dName.innerText = day;
-            grid.appendChild(dName);
-        });
-
-        const firstDay = new Date(year, month, 1).getDay();
-        const totalDays = new Date(year, month + 1, 0).getDate();
-
-        for (let i = 0; i < firstDay; i++) {
-            const empty = document.createElement('div');
-            empty.className = 'd-num empty'; grid.appendChild(empty);
-        }
-
-        for (let i = 1; i <= totalDays; i++) {
-            const curDate = new Date(year, month, i);
-            const dNum = document.createElement('div');
-            dNum.className = 'd-num'; dNum.innerText = i;
-
-            if (startDate && curDate.getTime() === startDate.getTime()) dNum.classList.add('active-bound');
-            if (endDate && curDate.getTime() === endDate.getTime()) dNum.classList.add('active-bound');
-            if (startDate && endDate && curDate > startDate && curDate < endDate) dNum.classList.add('in-between');
-
-            dNum.onclick = () => {
-                if (!startDate || (startDate && endDate)) { startDate = curDate; endDate = null; }
-                else { 
-                    if (curDate < startDate) { endDate = startDate; startDate = curDate; }
-                    else { endDate = curDate; }
-                }
-                renderCalendar();
-            };
-            grid.appendChild(dNum);
-        }
-        frame.appendChild(grid);
-        return frame;
-    }
-
-    function applySelection() {
-        if (startDate && endDate) {
-            const format = (d) => `${d.getDate()} ${months[d.getMonth()]}`;
-            document.getElementById('displayRange').innerText = `${format(startDate)} - ${format(endDate)}`;
-            closeCalendar();
-        }
+    function toggleCal() {
+        const modal = document.getElementById('calOverlay');
+        modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
     }
 </script>
+
 </body>
 </html>
