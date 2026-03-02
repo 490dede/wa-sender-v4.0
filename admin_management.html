@@ -3,253 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Admin - WA-Sender v4.0</title>
+    <title>Admin Management - WA-Sender v4.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <style>
-        :root {
-            --bg-soft: #f4f7f6; /* Terang meredam kontras */
-            --primary: #4A90E2;
-            --danger: #e74c3c;
-            --warning: #f39c12;
-            --success: #27ae60;
-            --text-dark: #333;
-        }
+        :root { --bg: #f4f7f6; --tosca: #40E0D0; --primary: #4A90E2; --white: #ffffff; --text: #333; --danger: #e74c3c; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; color: var(--text); }
+        
+        /* Navigasi (Identik dengan Dashboard) */
+        header { background: var(--white); padding: 15px; display: flex; align-items: center; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 100; }
+        .menu-btn { font-size: 24px; cursor: pointer; background: none; border: none; margin-right: 15px; color: var(--primary); }
+        .app-title { font-weight: 600; color: var(--primary); font-size: 16px; }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            background: var(--bg-soft);
-            color: var(--text-dark);
-        }
-
-        header {
-            background: white;
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid #ddd;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .menu-btn { font-size: 24px; cursor: pointer; background: none; border: none; margin-right: 15px; }
-        .app-title { font-weight: 600; font-size: 18px; flex-grow: 1; }
+        .sidenav { height: 100%; width: 0; position: fixed; z-index: 1001; top: 0; left: 0; background-color: var(--white); overflow-x: hidden; transition: 0.3s; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
+        .sidenav a { padding: 15px 25px; text-decoration: none; font-size: 15px; color: #444; display: block; border-bottom: 1px solid #f9f9f9; }
+        .sidenav .close-btn { text-align: right; font-size: 30px; display: block; padding: 10px 20px; color: var(--primary); }
 
         .container { padding: 20px; }
-        .page-title { font-size: 16px; font-weight: 600; margin-bottom: 20px; color: var(--primary); text-transform: uppercase; }
 
-        /* Form Card */
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-            margin-bottom: 25px;
-        }
-
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-size: 12px; font-weight: 400; font-style: italic; color: #666; margin-bottom: 5px; }
+        /* Form Pendaftaran Staff */
+        .section-title { font-size: 14px; font-weight: 600; color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .card-form { background: var(--white); padding: 20px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 25px; border-left: 5px solid var(--tosca); }
         
-        input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 14px;
-            box-sizing: border-box;
-        }
+        .label { display: block; font-size: 11px; font-style: italic; color: #777; margin-bottom: 6px; margin-top: 12px; }
+        .label:first-child { margin-top: 0; }
+        .input-field { width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 12px; font-size: 13px; box-sizing: border-box; background: #fafafa; outline: none; }
+        
+        .btn-add { width: 100%; padding: 14px; background: var(--primary); color: #fff; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 13px; margin-top: 20px; box-shadow: 0 4px 10px rgba(74, 144, 226, 0.2); }
 
-        .btn {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 14px;
-            transition: 0.2s;
-            text-transform: uppercase;
-        }
+        /* List Staff (Mobile Card Style) */
+        .staff-card { background: var(--white); padding: 15px; border-radius: 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); border: 1px solid #eee; }
+        .staff-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; background: #eee; }
+        .staff-info { flex: 1; }
+        .staff-info b { font-size: 14px; display: block; color: #333; }
+        .staff-info span { font-size: 11px; color: #888; display: block; }
+        .staff-role { font-size: 10px; font-weight: 700; color: var(--tosca); background: rgba(64, 224, 208, 0.1); padding: 2px 8px; border-radius: 10px; display: inline-block; margin-top: 4px; }
+        
+        /* Toggle Switch (Status Aktif) */
+        .switch { position: relative; display: inline-block; width: 34px; height: 20px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--tosca); }
+        input:checked + .slider:before { transform: translateX(14px); }
 
-        .btn-primary { background: var(--primary); color: white; }
-
-        /* List Admin Section */
-        .section-header { font-size: 13px; font-weight: 600; margin-bottom: 12px; color: #555; }
-
-        .admin-card {
-            background: white;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 12px;
-            display: flex;
-            flex-direction: column;
-            border-left: 5px solid var(--success);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-        }
-
-        .admin-card.suspended { border-left-color: var(--warning); opacity: 0.8; }
-
-        .admin-main-info h5 { margin: 0; font-size: 15px; color: var(--text-dark); }
-        .admin-main-info p { margin: 4px 0; font-size: 12px; color: #888; }
-        .admin-main-info .wa-num { color: var(--success); font-weight: 600; }
-
-        .admin-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 15px;
-            padding-top: 10px;
-            border-top: 1px solid #f0f0f0;
-        }
-
-        .action-btn {
-            padding: 8px;
-            border: none;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-            color: white;
-            text-transform: uppercase;
-        }
-
-        .btn-toggle { background: var(--warning); }
-        .btn-delete { background: var(--danger); }
-
-        /* Sidenav */
-        .sidenav {
-            height: 100%; width: 0; position: fixed; z-index: 1000; top: 0; left: 0;
-            background-color: white; overflow-x: hidden; transition: 0.3s; box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-        }
-        .sidenav a { padding: 15px 25px; text-decoration: none; font-size: 15px; color: #444; display: block; border-bottom: 1px solid #f9f9f9; }
-        .closebtn { padding: 20px; text-align: right; font-size: 30px; cursor: pointer; display: block; }
+        .btn-delete { color: var(--danger); font-size: 18px; border: none; background: none; cursor: pointer; padding: 5px; }
     </style>
 </head>
 <body>
 
-    <div id="mySidenav" class="sidenav">
-        <span class="closebtn" onclick="closeNav()">&times;</span>
-        <a href="dashboard_admin.html">📊 Dashboard Utama</a>
-        <a href="admin_management.html" style="background: #f0f7ff; color: var(--primary); font-weight: 600;">🔑 Manage Admin</a>
-        <a href="setting_bank.html">🏦 Setting Bank & Revenue</a>
+<div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="close-btn" onclick="closeNav()">&times;</a>
+    <a href="dashboard_admin.html">📊 Dashboard Analytics</a>
+    <a href="admin_management.html" style="font-weight:600; color:var(--primary);">👥 Admin Management</a>
+    <a href="post_editor_staff.html">📝 Post Editor</a>
+    <a href="admin_revenue.html">💰 Revenue Tracking</a>
+    <a href="admin_chat_bantuan.html">💬 Chat Bantuan</a>
+    <a href="user_login.html" style="color:#e74c3c; margin-top: 30px;">🚪 Keluar</a>
+</div>
+
+<header>
+    <button class="menu-btn" onclick="openNav()">☰</button>
+    <div class="app-title">Admin Management</div>
+</header>
+
+<div class="container">
+    <div class="section-title"><span>➕</span> DAFTARKAN STAF BARU</div>
+    <div class="card-form">
+        <label class="label">Nama Lengkap / Full Name:</label>
+        <input type="text" class="input-field" placeholder="Masukkan nama staf...">
+        
+        <label class="label">Email Staf:</label>
+        <input type="email" class="input-field" placeholder="contoh@gmail.com">
+        
+        <label class="label">Nomor WhatsApp (ID Login):</label>
+        <input type="tel" class="input-field" placeholder="62812xxxxxx">
+        
+        <label class="label">Hak Akses / Role:</label>
+        <select class="input-field">
+            <option>Staf Admin (Limited)</option>
+            <option>Super Admin (Full Access)</option>
+        </select>
+        
+        <button class="btn-add" onclick="alert('Staf berhasil didaftarkan!')">SIMPAN & BERIKAN AKSES</button>
     </div>
 
-    <header>
-        <button class="menu-btn" onclick="openNav()">☰</button>
-        <div class="app-title">WA-Sender v4.0</div>
-    </header>
-
-    <div class="container">
-        <div class="page-title">Pengaturan Admin (Owner Only)</div>
-
-        <div class="card">
-            <p style="margin:0 0 15px 0; font-size:13px; font-weight:600; color:var(--primary);">+ DAFTARKAN ADMIN BARU</p>
-            
-            <div class="form-group">
-                <label>Nama Lengkap:</label>
-                <input type="text" id="adm_name" placeholder="Nama Staf Admin">
-            </div>
-            
-            <div class="form-group">
-                <label>Email Admin:</label>
-                <input type="email" id="adm_email" placeholder="email@wasender.com">
-            </div>
-
-            <div class="form-group">
-                <label>Nomor WhatsApp:</label>
-                <input type="tel" id="adm_wa" placeholder="628123456789">
-            </div>
-
-            <button class="btn btn-primary" onclick="addAdmin()">Simpan & Berikan Akses</button>
+    <div class="section-title"><span>👥</span> STAF TERDAFTAR (3)</div>
+    
+    <div class="staff-card">
+        <img src="https://via.placeholder.com/100" class="staff-img" alt="Staff">
+        <div class="staff-info">
+            <b>M. Ali Ridho</b>
+            <span>adeali490@gmail.com</span>
+            <div class="staff-role">SUPER ADMIN</div>
         </div>
-
-        <div class="section-header">DAFTAR STAF ADMIN AKTIF:</div>
-        <div id="admin_list">
-            <p style="font-size: 12px; color: #999;">Memuat data staf...</p>
+        <div style="text-align: right;">
+            <label class="switch">
+                <input type="checkbox" checked>
+                <span class="slider"></span>
+            </label>
+            <br>
+            <button class="btn-delete">🗑</button>
         </div>
     </div>
 
-    <script>
-        const _supabase = supabase.createClient('URL_ANDA', 'KEY_ANDA');
+    <div class="staff-card">
+        <img src="https://via.placeholder.com/100" class="staff-img" alt="Staff">
+        <div class="staff-info">
+            <b>Siti Aminah</b>
+            <span>siti.aminah@gmail.com</span>
+            <div class="staff-role">STAF ADMIN</div>
+        </div>
+        <div style="text-align: right;">
+            <label class="switch">
+                <input type="checkbox" checked>
+                <span class="slider"></span>
+            </label>
+            <br>
+            <button class="btn-delete">🗑</button>
+        </div>
+    </div>
 
-        function openNav() { document.getElementById("mySidenav").style.width = "280px"; }
-        function closeNav() { document.getElementById("mySidenav").style.width = "0"; }
+</div>
 
-        async function fetchAdmins() {
-            const { data, error } = await _supabase
-                .from('admin_profiles')
-                .select('*')
-                .neq('email', 'adeali490@gmail.com') // Jangan tampilkan owner di list
-                .order('created_at', { ascending: false });
+<script>
+    function openNav() { document.getElementById("mySidenav").style.width = "280px"; }
+    function closeNav() { document.getElementById("mySidenav").style.width = "0"; }
+</script>
 
-            const listArea = document.getElementById('admin_list');
-            listArea.innerHTML = '';
-
-            if (data && data.length > 0) {
-                data.forEach(admin => {
-                    const isSuspended = admin.status === 'Non-Aktif';
-                    const card = document.createElement('div');
-                    card.className = `admin-card ${isSuspended ? 'suspended' : ''}`;
-                    card.innerHTML = `
-                        <div class="admin-main-info">
-                            <h5>${admin.full_name}</h5>
-                            <p>${admin.email}</p>
-                            <p class="wa-num">WA: ${admin.whatsapp_no || '-'}</p>
-                            <p style="font-size:10px; color:${isSuspended ? 'orange' : 'green'}">Status: ${admin.status}</p>
-                        </div>
-                        <div class="admin-actions">
-                            <button class="action-btn btn-toggle" onclick="updateStatus('${admin.id}', '${admin.status}')">
-                                ${isSuspended ? 'Aktifkan' : 'Non-Aktifkan'}
-                            </button>
-                            <button class="action-btn btn-delete" onclick="removeAdmin('${admin.id}')">Hapus Akun</button>
-                        </div>
-                    `;
-                    listArea.appendChild(card);
-                });
-            } else {
-                listArea.innerHTML = '<p style="font-size:12px; color:#999;">Belum ada staf admin terdaftar.</p>';
-            }
-        }
-
-        async function addAdmin() {
-            const name = document.getElementById('adm_name').value;
-            const email = document.getElementById('adm_email').value;
-            const wa = document.getElementById('adm_wa').value;
-
-            if(!name || !email || !wa) return alert("Mohon lengkapi seluruh data!");
-
-            const { error } = await _supabase.from('admin_profiles').insert([
-                { full_name: name, email: email, whatsapp_no: wa, status: 'Aktif' }
-            ]);
-
-            if(!error) {
-                alert("Staf Admin berhasil didaftarkan!");
-                document.getElementById('adm_name').value = '';
-                document.getElementById('adm_email').value = '';
-                document.getElementById('adm_wa').value = '';
-                fetchAdmins();
-            }
-        }
-
-        async function updateStatus(id, current) {
-            const nextStatus = current === 'Aktif' ? 'Non-Aktif' : 'Aktif';
-            if(confirm(`Ubah status admin menjadi ${nextStatus}?`)) {
-                await _supabase.from('admin_profiles').update({ status: nextStatus }).eq('id', id);
-                fetchAdmins();
-            }
-        }
-
-        async function removeAdmin(id) {
-            if(confirm("HAPUS PERMANEN? Admin ini tidak akan bisa login lagi.")) {
-                await _supabase.from('admin_profiles').delete().eq('id', id);
-                fetchAdmins();
-            }
-        }
-
-        fetchAdmins();
-    </script>
 </body>
 </html>
