@@ -1,83 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login User - WA-Sender v4.0</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <title>User Login - WA-Sender v4.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; padding: 20px; max-width: 480px; margin: auto; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input { width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px; }
-        .btn-login { 
-            width: 100%; padding: 15px; background-color: #4A90E2; color: white; 
-            border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer;
-        }
+        :root { --bg: #f4f7f6; --tosca: #40E0D0; --primary: #4A90E2; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .card { width: 90%; max-width: 380px; background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05); position: relative; }
+        .header-shape { background: var(--tosca); height: 100px; width: 150%; position: absolute; top: -40px; left: -25%; border-radius: 50%; z-index: 1; }
+        .content { position: relative; z-index: 2; padding: 30px 25px; }
+        h2 { font-size: 18px; color: #008080; text-align: center; margin-bottom: 30px; }
+        .label { display: block; font-size: 11px; font-style: italic; color: #666; margin-bottom: 5px; }
+        .input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 14px; box-sizing: border-box; margin-bottom: 15px; }
+        .btn { width: 100%; padding: 14px; background: var(--primary); color: #fff; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 14px; }
+        .footer-link { text-align: center; font-size: 12px; margin-top: 20px; color: #777; }
     </style>
 </head>
 <body>
-
-    <h2 style="text-align: center;">Halaman Login User / User Login Page</h2>
-
-    <form id="loginForm">
-        <div class="form-group">
-            <label>email :</label>
-            <input type="email" id="email" placeholder="Enter email / Masukkan email" required>
-        </div>
-
-        <div class="form-group">
-            <label>password :</label>
-            <input type="password" id="password" placeholder="Enter password / Masukkan kata sandi" required>
-        </div>
-
-        <button type="submit" class="btn-login">LOGIN / MASUK</button>
-    </form>
-
-    <p style="text-align: center; margin-top: 20px;">
-        Belum punya akun? <a href="user_register.html" style="color: purple;">Daftar disini / Register here</a>
-    </p>
-
-    <script>
-        // Inisialisasi menggunakan kredensial yang Anda berikan
-        const _supabase = supabase.createClient('https://fdvjaulucahzmmmdwkau.supabase.co', 'sb_publishable_yN4AQrZGQEH8tzhkCsLf2g_KGoakIFa');
-
-        document.getElementById('loginForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            // 1. Proses Login Auth
-            const { data: authData, error: authError } = await _supabase.auth.signInWithPassword({ email, password });
-
-            if (authError) {
-                return alert("Login Failed / Login Gagal: " + authError.message);
-            }
-
-            // 2. Ambil Data Profil untuk Cek Kategori & Status
-            if (authData.user) {
-                const { data: profile, error: profileError } = await _supabase
-                    .from('user_profiles')
-                    .select('kategori_user, status_user')
-                    .eq('id', authData.user.id)
-                    .single();
-
-                if (profileError || !profile) {
-                    return alert("Profile not found / Profil tidak ditemukan");
-                }
-
-                // 3. Logika Redireksi Berdasarkan Status & Kategori
-                if (profile.status_user === 'Tidak Aktif') {
-                    window.location.href = 'dashboard_tidak_aktif.html';
-                } else {
-                    const kategori = profile.kategori_user;
-                    if (kategori === 'Trial') window.location.href = 'dashboard_trial.html';
-                    else if (kategori === 'Pro') window.location.href = 'dashboard_pro.html';
-                    else if (kategori === 'Multi') window.location.href = 'dashboard_multi.html';
-                    else if (kategori === 'Team') window.location.href = 'dashboard_team.html';
-                }
-            }
-        };
-    </script>
+<div class="card">
+    <div class="header-shape"></div>
+    <div class="content">
+        <h2>USER LOGIN</h2>
+        <label class="label">Email / Surel:</label>
+        <input type="email" class="input" placeholder="Enter your email">
+        <label class="label">Password / Kata Sandi:</label>
+        <input type="password" class="input" placeholder="Enter your password">
+        <button class="btn">LOGIN / MASUK</button>
+        <div class="footer-link">Belum punya akun? <a href="user_register.html" style="color:var(--primary);">Daftar di sini</a></div>
+    </div>
+</div>
 </body>
 </html>
