@@ -10,14 +10,13 @@
         :root { --bg: #f4f7f6; --tosca: #40E0D0; --primary: #4A90E2; --white: #ffffff; --text: #333; --danger: #e74c3c; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding-bottom: 50px; color: var(--text); }
         
-        /* REVISI 1: Standarisasi Header & Padding (Identik Dashboard) */
         header { background: var(--white); padding: 15px; display: flex; align-items: center; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 100; }
         .menu-btn { font-size: 24px; cursor: pointer; background: none; border: none; margin-right: 15px; color: var(--primary); }
         .app-title { font-weight: 600; color: var(--primary); font-size: 16px; }
 
-        .container { padding: 20px; } /* Gap & Padding standar ponsel */
+        .container { padding: 20px; } /* STANDARISASI GAP & PADDING */
 
-        /* REVISI 3: Filter Susun Vertikal */
+        /* FILTER SECTION - VERTICAL SETUP */
         .filter-card { background: var(--white); padding: 20px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
         .label-italic { display: block; font-size: 11px; font-style: italic; color: #777; margin-bottom: 8px; }
         
@@ -26,18 +25,16 @@
             font-size: 13px; box-sizing: border-box; background: #fafafa; margin-bottom: 15px;
         }
 
-        /* Fitur Tanggal Standar "Mantap" */
         .datepicker-trigger {
             display: flex; align-items: center; background: #fafafa; border: 1px solid #e0e0e0;
             border-radius: 25px; padding: 12px 18px; cursor: pointer; font-size: 13px; 
-            font-weight: 600; color: var(--primary); margin-bottom: 5px;
+            font-weight: 600; color: var(--primary);
         }
 
-        /* REVISI 1: Button Size & Card Style (Identik Gambar 2) */
+        /* FORM SECTION - STANDARISASI BUTTON & CARD */
         .form-card { background: var(--white); padding: 20px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border-left: 5px solid var(--tosca); }
         .section-title { font-size: 14px; font-weight: 600; color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
         
-        /* REVISI 2: Quill Editor Height */
         #editor-container { height: 120px; font-size: 14px; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; }
         .ql-toolbar { border-top-left-radius: 12px; border-top-right-radius: 12px; background: #f9f9f9; }
 
@@ -47,17 +44,28 @@
             margin-top: 15px; box-shadow: 0 5px 15px rgba(74, 144, 226, 0.2); 
         }
 
-        /* List Staf - Identik Gambar 2 */
+        /* LIST CARD ADMIN - DENGAN SWITCH & DELETE */
         .staff-item { 
             background: var(--white); padding: 15px; border-radius: 18px; margin-top: 10px; 
             display: flex; align-items: center; border: 1px solid #eee; position: relative;
         }
         .avatar { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--tosca); margin-right: 12px; }
+        .staff-info { flex-grow: 1; }
         .staff-info b { font-size: 14px; display: block; }
         .staff-info span { font-size: 11px; color: #888; }
         .role-badge { font-size: 9px; font-weight: 700; color: var(--tosca); background: #e0fbf9; padding: 3px 8px; border-radius: 10px; display: inline-block; margin-top: 4px; }
 
-        /* MODAL CALENDAR STANDAR */
+        /* SWITCH TOGGLE */
+        .actions { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+        .switch { position: relative; display: inline-block; width: 34px; height: 20px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--tosca); }
+        input:checked + .slider:before { transform: translateX(14px); }
+        .delete-btn { color: var(--danger); font-size: 18px; cursor: pointer; background: none; border: none; padding: 0; }
+
+        /* MODAL CALENDAR */
         #calOverlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:2000; justify-content:center; align-items:center; }
         .cal-popup { width: 85%; background: #fff; border-radius: 25px; padding: 20px; }
     </style>
@@ -71,24 +79,26 @@
 
 <div class="container">
     <div class="filter-card">
-        <label class="label-italic">Jenis Akses / Access Type:</label>
-        <select class="input-field">
-            <option>Semua Admin</option>
-            <option>Super Admin</option>
-            <option>Staf Admin (Limited)</option>
-        </select>
+        <label class="label-italic">Cari Admin / Search:</label>
+        <input type="text" class="input-field" placeholder="Nama atau email...">
 
         <label class="label-italic">Periode Bergabung / Join Date:</label>
         <div class="datepicker-trigger" onclick="toggleCal()">
-            <span id="dateRangeText">Pilih Rentang Tanggal</span>
+            <span>📅 Pilih Rentang Tanggal</span>
         </div>
     </div>
 
     <div class="form-card">
-        <div class="section-title">✚ DAFTARKAN STAF BARU</div>
+        <div class="section-title">✚ DAFTARKAN ADMIN BARU</div>
         
         <label class="label-italic">Nama Lengkap / Full Name:</label>
-        <input type="text" class="input-field" placeholder="Masukkan nama staf...">
+        <input type="text" class="input-field" placeholder="Nama lengkap admin...">
+
+        <label class="label-italic">Email Staf:</label>
+        <input type="email" class="input-field" placeholder="contoh@gmail.com">
+
+        <label class="label-italic">Nomor WhatsApp (ID Login):</label>
+        <input type="number" class="input-field" placeholder="62812xxxxxx">
 
         <label class="label-italic">Catatan / Deskripsi Tugas:</label>
         <div id="editor-container"></div>
@@ -97,14 +107,20 @@
     </div>
 
     <div style="margin-top: 25px;">
-        <div class="section-title" style="color: #666;">👥 STAF TERDAFTAR (2)</div>
+        <div class="section-title" style="color: #666;">👥 ADMIN TERDAFTAR</div>
         
         <div class="staff-item">
             <img src="https://via.placeholder.com/45" class="avatar" alt="Admin">
             <div class="staff-info">
                 <b>M. Ali Ridho</b>
                 <span>adeali490@gmail.com</span><br>
-                <div class="role-badge">SUPER ADMIN</div>
+                <div class="role-badge">ADMIN-ZERO</div>
+            </div>
+            <div class="actions">
+                <label class="switch">
+                    <input type="checkbox" checked disabled>
+                    <span class="slider"></span>
+                </label>
             </div>
         </div>
 
@@ -113,7 +129,14 @@
             <div class="staff-info">
                 <b>Siti Aminah</b>
                 <span>siti.aminah@gmail.com</span><br>
-                <div class="role-badge">STAF ADMIN</div>
+                <div class="role-badge">ADMIN</div>
+            </div>
+            <div class="actions">
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+                <button class="delete-btn">🗑️</button>
             </div>
         </div>
     </div>
@@ -121,9 +144,9 @@
 
 <div id="calOverlay" onclick="this.style.display='none'">
     <div class="cal-popup" onclick="event.stopPropagation()">
-        <p style="text-align:center; font-size:13px; font-weight:600;">PILIH RENTANG TANGGAL</p>
-        <div style="height: 200px; background: #f9f9f9; border-radius: 15px; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #999;">
-            [ Area Fitur Tanggal Standar Mantap ]
+        <p style="text-align:center; font-size:13px; font-weight:600;">RENTANG TANGGAL</p>
+        <div style="height: 150px; background: #f9f9f9; border-radius: 15px; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #999;">
+            [ Fitur Tanggal Standar Aktif ]
         </div>
         <button class="btn-primary" onclick="toggleCal()">APPLY</button>
     </div>
@@ -131,14 +154,11 @@
 
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 <script>
-    /* REVISI 2: Inisialisasi Quill dengan Fitur Link */
+    // Quill dengan Fitur Link sesuai revisi sebelumnya
     var quill = new Quill('#editor-container', {
         theme: 'snow',
         modules: {
-            toolbar: [
-                ['bold', 'italic', 'link'], // Tombol Link Aktif
-                [{ 'list': 'bullet' }]
-            ]
+            toolbar: [['bold', 'italic', 'link', { 'list': 'bullet' }]]
         },
         placeholder: 'Tulis deskripsi tugas di sini...'
     });
