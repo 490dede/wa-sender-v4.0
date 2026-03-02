@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Management - WA-Sender v4.0</title>
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #f4f7f6; --tosca: #40E0D0; --primary: #4A90E2; --white: #ffffff; --text: #333; --danger: #e74c3c; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; color: var(--text); }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding-bottom: 50px; color: var(--text); }
         
-        /* Navigasi (Identik dengan Dashboard) */
+        /* Header - Identik Dashbord */
         header { background: var(--white); padding: 15px; display: flex; align-items: center; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 100; }
         .menu-btn { font-size: 24px; cursor: pointer; background: none; border: none; margin-right: 15px; color: var(--primary); }
         .app-title { font-weight: 600; color: var(--primary); font-size: 16px; }
@@ -20,33 +21,45 @@
 
         .container { padding: 20px; }
 
-        /* Form Pendaftaran Staff */
-        .section-title { font-size: 14px; font-weight: 600; color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
-        .card-form { background: var(--white); padding: 20px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 25px; border-left: 5px solid var(--tosca); }
-        
-        .label { display: block; font-size: 11px; font-style: italic; color: #777; margin-bottom: 6px; margin-top: 12px; }
+        /* Filter Section Vertikal */
+        .filter-section { background: var(--white); padding: 18px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .label { display: block; font-size: 11px; font-style: italic; color: #777; margin-bottom: 8px; margin-top: 12px; }
         .label:first-child { margin-top: 0; }
+
         .input-field { width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 12px; font-size: 13px; box-sizing: border-box; background: #fafafa; outline: none; }
         
-        .btn-add { width: 100%; padding: 14px; background: var(--primary); color: #fff; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 13px; margin-top: 20px; box-shadow: 0 4px 10px rgba(74, 144, 226, 0.2); }
+        /* Standard Calendar Trigger */
+        .datepicker-trigger {
+            display: flex; align-items: center; background: #fafafa; border: 1px solid #e0e0e0;
+            border-radius: 25px; padding: 12px 18px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--primary);
+        }
 
-        /* List Staff (Mobile Card Style) */
-        .staff-card { background: var(--white); padding: 15px; border-radius: 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); border: 1px solid #eee; }
-        .staff-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; background: #eee; }
-        .staff-info { flex: 1; }
-        .staff-info b { font-size: 14px; display: block; color: #333; }
-        .staff-info span { font-size: 11px; color: #888; display: block; }
-        .staff-role { font-size: 10px; font-weight: 700; color: var(--tosca); background: rgba(64, 224, 208, 0.1); padding: 2px 8px; border-radius: 10px; display: inline-block; margin-top: 4px; }
-        
-        /* Toggle Switch (Status Aktif) */
-        .switch { position: relative; display: inline-block; width: 34px; height: 20px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--tosca); }
-        input:checked + .slider:before { transform: translateX(14px); }
+        /* Card Form & Editor */
+        .card-form { background: var(--white); padding: 18px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-top: 20px; border-left: 5px solid var(--tosca); }
+        #editor-container { height: 150px; font-size: 14px; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; }
+        .ql-toolbar { border-top-left-radius: 12px; border-top-right-radius: 12px; background: #f9f9f9; }
 
-        .btn-delete { color: var(--danger); font-size: 18px; border: none; background: none; cursor: pointer; padding: 5px; }
+        .btn-action { width: 100%; padding: 16px; background: var(--primary); color: #fff; border: none; border-radius: 15px; font-weight: 600; cursor: pointer; font-size: 14px; margin-top: 20px; box-shadow: 0 5px 15px rgba(74, 144, 226, 0.2); }
+
+        /* Staff Card List */
+        .staff-card { background: var(--white); padding: 15px; border-radius: 18px; margin-top: 12px; display: flex; align-items: center; gap: 12px; border: 1px solid #eee; }
+        .staff-info b { font-size: 14px; display: block; }
+        .staff-info span { font-size: 11px; color: #888; }
+
+        /* STANDAR POP-UP CALENDAR */
+        #calendarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; }
+        .calendar-popup { width: 88%; max-width: 330px; background: var(--white); border-radius: 25px; padding: 15px; }
+        .nav-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .nav-btn { background: #f0f0f0; border: none; border-radius: 50%; width: 35px; height: 35px; color: var(--primary); cursor: pointer; font-weight: bold; }
+        .month-frame { border: 1px solid var(--tosca); border-radius: 15px; padding: 10px; margin-bottom: 10px; }
+        .month-title { font-size: 11px; font-weight: 700; text-align: center; margin-bottom: 8px; color: #008080; text-transform: uppercase; }
+        .vertical-grid { display: grid; grid-template-rows: repeat(7, 1fr); grid-auto-flow: column; gap: 4px; font-size: 11px; }
+        .d-name { font-weight: 800; color: var(--primary); text-align: center; padding: 6px 4px; border-right: 1px solid #eee; background: #fdfdfd; }
+        .d-num { text-align: center; padding: 10px 0; border-radius: 8px; cursor: pointer; color: #555; }
+        .d-num.active-bound { background: var(--primary) !important; color: white !important; font-weight: bold; }
+        .d-num.in-between { background: rgba(64, 224, 208, 0.3); color: #008080; }
+        .popup-footer { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-foot { flex: 1; padding: 14px; border-radius: 12px; border: none; font-weight: 600; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -67,68 +80,128 @@
 </header>
 
 <div class="container">
-    <div class="section-title"><span>➕</span> DAFTARKAN STAF BARU</div>
-    <div class="card-form">
-        <label class="label">Nama Lengkap / Full Name:</label>
-        <input type="text" class="input-field" placeholder="Masukkan nama staf...">
-        
-        <label class="label">Email Staf:</label>
-        <input type="email" class="input-field" placeholder="contoh@gmail.com">
-        
-        <label class="label">Nomor WhatsApp (ID Login):</label>
-        <input type="tel" class="input-field" placeholder="62812xxxxxx">
-        
-        <label class="label">Hak Akses / Role:</label>
+    <div class="filter-section">
+        <label class="label">Jenis Akses / Access Type:</label>
         <select class="input-field">
-            <option>Staf Admin (Limited)</option>
-            <option>Super Admin (Full Access)</option>
+            <option>Semua Admin</option>
+            <option>Super Admin</option>
+            <option>Staf Editor</option>
         </select>
+
+        <label class="label">Periode Bergabung / Join Date:</label>
+        <div class="datepicker-trigger" onclick="openCalendar()">
+            <span id="displayRange">Pilih Rentang Tanggal</span>
+        </div>
+    </div>
+
+    <div class="card-form">
+        <label class="label">Nama Admin Baru:</label>
+        <input type="text" class="input-field" placeholder="Nama lengkap..." style="margin-bottom: 12px;">
         
-        <button class="btn-add" onclick="alert('Staf berhasil didaftarkan!')">SIMPAN & BERIKAN AKSES</button>
+        <label class="label">Catatan / Deskripsi Tugas:</label>
+        <div id="editor-container"></div>
+        
+        <button class="btn-action" onclick="alert('Admin berhasil didaftarkan!')">DAFTARKAN ADMIN</button>
     </div>
-
-    <div class="section-title"><span>👥</span> STAF TERDAFTAR (3)</div>
-    
-    <div class="staff-card">
-        <img src="https://via.placeholder.com/100" class="staff-img" alt="Staff">
-        <div class="staff-info">
-            <b>M. Ali Ridho</b>
-            <span>adeali490@gmail.com</span>
-            <div class="staff-role">SUPER ADMIN</div>
-        </div>
-        <div style="text-align: right;">
-            <label class="switch">
-                <input type="checkbox" checked>
-                <span class="slider"></span>
-            </label>
-            <br>
-            <button class="btn-delete">🗑</button>
-        </div>
-    </div>
-
-    <div class="staff-card">
-        <img src="https://via.placeholder.com/100" class="staff-img" alt="Staff">
-        <div class="staff-info">
-            <b>Siti Aminah</b>
-            <span>siti.aminah@gmail.com</span>
-            <div class="staff-role">STAF ADMIN</div>
-        </div>
-        <div style="text-align: right;">
-            <label class="switch">
-                <input type="checkbox" checked>
-                <span class="slider"></span>
-            </label>
-            <br>
-            <button class="btn-delete">🗑</button>
-        </div>
-    </div>
-
 </div>
 
+<div id="calendarOverlay">
+    <div class="calendar-popup">
+        <div class="nav-controls">
+            <button class="nav-btn" onclick="changeMonth(-1)">▲</button>
+            <b style="font-size: 13px;">PILIH PERIODE</b>
+            <button class="nav-btn" onclick="changeMonth(1)">▼</button>
+        </div>
+        <div id="calendarView"></div>
+        <div class="popup-footer">
+            <button class="btn-foot" style="background:#eee; color:#666;" onclick="closeCalendar()">CANCEL</button>
+            <button class="btn-foot" style="background:var(--tosca); color:#008080;" onclick="applySelection()">APPLY</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 <script>
+    /* Quill dengan Insert Link */
+    var quill = new Quill('#editor-container', {
+        theme: 'snow',
+        modules: { toolbar: [['bold', 'italic', 'link'], [{ 'list': 'bullet' }]] }
+    });
+
     function openNav() { document.getElementById("mySidenav").style.width = "280px"; }
     function closeNav() { document.getElementById("mySidenav").style.width = "0"; }
-</script>
 
+    /* Logic Calendar Kunci */
+    let startDate = null; let endDate = null;
+    let viewDate = new Date();
+    const months = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+
+    function openCalendar() { document.getElementById('calendarOverlay').style.display = 'flex'; renderCalendar(); }
+    function closeCalendar() { document.getElementById('calendarOverlay').style.display = 'none'; }
+    function changeMonth(offset) { viewDate.setMonth(viewDate.getMonth() + offset); renderCalendar(); }
+
+    function renderCalendar() {
+        const view = document.getElementById('calendarView');
+        view.innerHTML = '';
+        for (let i = 0; i < 2; i++) {
+            let d = new Date(viewDate.getFullYear(), viewDate.getMonth() + i, 1);
+            view.appendChild(createMonthFrame(d.getMonth(), d.getFullYear()));
+        }
+    }
+
+    function createMonthFrame(month, year) {
+        const frame = document.createElement('div');
+        frame.className = 'month-frame';
+        const title = document.createElement('div');
+        title.className = 'month-title'; title.innerText = `${months[month]} ${year}`;
+        frame.appendChild(title);
+
+        const grid = document.createElement('div');
+        grid.className = 'vertical-grid';
+        ['M', 'S', 'S', 'R', 'K', 'J', 'S'].forEach(day => {
+            const dName = document.createElement('div');
+            dName.className = 'd-name'; dName.innerText = day;
+            grid.appendChild(dName);
+        });
+
+        const firstDay = new Date(year, month, 1).getDay();
+        const totalDays = new Date(year, month + 1, 0).getDate();
+
+        for (let i = 0; i < firstDay; i++) {
+            const empty = document.createElement('div');
+            empty.className = 'd-num empty'; grid.appendChild(empty);
+        }
+
+        for (let i = 1; i <= totalDays; i++) {
+            const curDate = new Date(year, month, i);
+            const dNum = document.createElement('div');
+            dNum.className = 'd-num'; dNum.innerText = i;
+
+            if (startDate && curDate.getTime() === startDate.getTime()) dNum.classList.add('active-bound');
+            if (endDate && curDate.getTime() === endDate.getTime()) dNum.classList.add('active-bound');
+            if (startDate && endDate && curDate > startDate && curDate < endDate) dNum.classList.add('in-between');
+
+            dNum.onclick = () => {
+                if (!startDate || (startDate && endDate)) { startDate = curDate; endDate = null; }
+                else { 
+                    if (curDate < startDate) { endDate = startDate; startDate = curDate; }
+                    else { endDate = curDate; }
+                }
+                renderCalendar();
+            };
+            grid.appendChild(dNum);
+        }
+        frame.appendChild(grid);
+        return frame;
+    }
+
+    function applySelection() {
+        if (startDate && endDate) {
+            const format = (d) => `${d.getDate()} ${months[d.getMonth()]}`;
+            document.getElementById('displayRange').innerText = `${format(startDate)} - ${format(endDate)}`;
+            closeCalendar();
+        }
+    }
+</script>
 </body>
 </html>
