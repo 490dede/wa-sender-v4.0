@@ -7,60 +7,54 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #f4f7f6; --tosca: #40E0D0; --primary: #4A90E2; --white: #ffffff; --text: #333; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding-bottom: 50px; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding-bottom: 50px; }
         
-        /* Header */
         header { background: var(--white); padding: 15px; display: flex; align-items: center; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 100; }
         .menu-btn { font-size: 24px; cursor: pointer; background: none; border: none; margin-right: 15px; }
         .app-title { font-weight: 600; color: var(--primary); font-size: 16px; }
 
         .container { padding: 20px; }
-
-        /* Filter Kolom Lingkaran */
         .filter-card { background: var(--white); padding: 18px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
         .label { display: block; font-size: 11px; font-style: italic; color: #666; margin-bottom: 10px; }
         
+        /* Kolom Lingkaran Trigger */
         .datepicker-trigger {
             display: flex; align-items: center; background: #fafafa; border: 1px solid #e0e0e0;
             border-radius: 25px; padding: 10px 18px; cursor: pointer; font-size: 13px; font-weight: 600;
         }
 
-        /* OVERLAY POP-UP TENGAH LAYAR */
+        /* OVERLAY POP-UP */
         #calendarOverlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center;
         }
 
         .calendar-popup {
             width: 85%; max-width: 320px; background: var(--white); border-radius: 20px;
-            padding: 15px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); animation: fadeIn 0.3s ease;
+            padding: 15px; box-shadow: 0 15px 40px rgba(0,0,0,0.2);
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-
-        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 5px; }
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .calendar-header b { font-size: 14px; color: #008080; }
 
-        /* GRID VERTIKAL: Minggu di Atas, Sabtu di Bawah */
-        .month-frame {
-            border: 1px solid var(--tosca); border-radius: 12px; padding: 10px; margin-bottom: 15px;
-        }
+        .month-frame { border: 1px solid var(--tosca); border-radius: 12px; padding: 10px; margin-bottom: 12px; }
         
+        /* GRID VERTIKAL LOGIC */
         .vertical-calendar-grid {
-            display: grid;
-            grid-template-rows: repeat(7, 1fr); /* 7 baris untuk hari */
-            grid-auto-flow: column; /* Mengalir ke samping */
-            gap: 5px;
-            font-size: 11px; /* Ukuran teks diperkecil sesuai permintaan */
+            display: grid; grid-template-rows: repeat(7, 1fr); grid-auto-flow: column;
+            gap: 4px; font-size: 11px;
         }
 
-        .day-name { font-weight: 700; color: var(--primary); text-align: center; padding: 4px; border-right: 1px solid #eee; }
-        .day-num { text-align: center; padding: 6px; border-radius: 6px; cursor: pointer; transition: 0.2s; color: #555; }
-        .day-num:hover { background: var(--tosca); color: #008080; }
-        .day-num.selected { background: var(--primary); color: white; }
+        .day-name { font-weight: 800; color: var(--primary); text-align: center; padding: 4px; border-right: 1px solid #eee; background: #f9f9f9; }
+        .day-num { text-align: center; padding: 8px 4px; border-radius: 6px; cursor: pointer; color: #555; position: relative; }
+        
+        /* State Warna Blok */
+        .day-num.selected-bound { background: var(--primary) !important; color: white !important; font-weight: bold; }
+        .day-num.in-range { background: rgba(64, 224, 208, 0.3); color: #008080; }
+        .day-num:active { background: var(--tosca); }
 
         .popup-footer { display: flex; gap: 10px; margin-top: 10px; }
-        .btn-action { flex: 1; padding: 10px; border-radius: 8px; border: none; font-weight: 600; font-size: 12px; cursor: pointer; }
+        .btn-action { flex: 1; padding: 12px; border-radius: 10px; border: none; font-weight: 600; font-size: 12px; cursor: pointer; }
         .btn-cancel { background: #eee; color: #666; }
         .btn-apply { background: var(--tosca); color: #008080; }
 
@@ -79,8 +73,8 @@
 <div class="container">
     <div class="filter-card">
         <label class="label">Pilih Periode / Select Period:</label>
-        <div class="datepicker-trigger" onclick="togglePopup()">
-            <span>📅</span> &nbsp; <span id="dateDisplay">01 Mar - 02 Mar</span>
+        <div class="datepicker-trigger" onclick="openPopup()">
+            <span>📅</span> &nbsp; <span id="dateDisplay">Klik untuk pilih tanggal</span>
         </div>
     </div>
 
@@ -93,46 +87,93 @@
 <div id="calendarOverlay">
     <div class="calendar-popup">
         <div class="calendar-header">
-            <b>PILIH RENTANG</b>
-            <span onclick="togglePopup()" style="cursor:pointer">✕</span>
+            <b>RENTANG TANGGAL</b>
+            <span onclick="closePopup()" style="cursor:pointer; font-weight: bold;">✕</span>
         </div>
 
-        <div class="month-frame">
-            <div style="font-size: 12px; font-weight: 600; margin-bottom: 8px; text-align: center;">Maret 2026</div>
-            <div class="vertical-calendar-grid">
-                <div class="day-name">M</div><div class="day-name">S</div><div class="day-name">S</div><div class="day-name">R</div><div class="day-name">K</div><div class="day-name">J</div><div class="day-name">S</div>
-                <div class="day-num">1</div><div class="day-num">2</div><div class="day-num">3</div><div class="day-num">4</div><div class="day-num">5</div><div class="day-num">6</div><div class="day-num">7</div>
-                <div class="day-num">8</div><div class="day-num">9</div><div class="day-num">10</div><div class="day-num">11</div><div class="day-num">12</div><div class="day-num">13</div><div class="day-num">14</div>
-                <div class="day-num">15</div><div class="day-num">16</div><div class="day-num">17</div><div class="day-num">18</div><div class="day-num">19</div><div class="day-num">20</div><div class="day-num">21</div>
-            </div>
-        </div>
-
-        <div class="month-frame">
-            <div style="font-size: 12px; font-weight: 600; margin-bottom: 8px; text-align: center;">April 2026</div>
-            <div class="vertical-calendar-grid">
-                <div class="day-name">M</div><div class="day-name">S</div><div class="day-name">S</div><div class="day-name">R</div><div class="day-name">K</div><div class="day-name">J</div><div class="day-name">S</div>
-                <div class="day-num">1</div><div class="day-num">2</div><div class="day-num">3</div><div class="day-num">4</div><div class="day-num">5</div><div class="day-num">6</div><div class="day-num">7</div>
-                <div class="day-num">8</div><div class="day-num">9</div><div class="day-num">10</div><div class="day-num">11</div><div class="day-num">12</div><div class="day-num">13</div><div class="day-num">14</div>
+        <div id="calendarContainer">
+            <div class="month-frame" data-month="Maret">
+                <div style="font-size: 12px; font-weight: 700; margin-bottom: 8px; text-align: center;">Maret 2026</div>
+                <div class="vertical-calendar-grid">
+                    <div class="day-name">M</div><div class="day-name">S</div><div class="day-name">S</div><div class="day-name">R</div><div class="day-name">K</div><div class="day-name">J</div><div class="day-name">S</div>
+                    <script>
+                        for(let i=1; i<=28; i++) {
+                            document.write(`<div class="day-num" data-val="${i}" onclick="selectDate(${i}, this)">${i}</div>`);
+                        }
+                    </script>
+                </div>
             </div>
         </div>
 
         <div class="popup-footer">
-            <button class="btn-action btn-cancel" onclick="togglePopup()">BATAL</button>
-            <button class="btn-action btn-apply" onclick="applyDate()">APPLY</button>
+            <button class="btn-action btn-cancel" onclick="closePopup()">BATAL</button>
+            <button class="btn-action btn-apply" onclick="confirmDate()">APPLY</button>
         </div>
     </div>
 </div>
 
 <script>
-    function togglePopup() {
-        const overlay = document.getElementById('calendarOverlay');
-        overlay.style.display = (overlay.style.display === 'flex') ? 'none' : 'flex';
+    let startDate = null;
+    let endDate = null;
+
+    function openPopup() {
+        document.getElementById('calendarOverlay').style.display = 'flex';
     }
 
-    function applyDate() {
-        // Simulasi apply tanggal
-        document.getElementById('dateDisplay').innerText = "05 Mar - 20 Mar";
-        togglePopup();
+    function closePopup() {
+        document.getElementById('calendarOverlay').style.display = 'none';
+        resetSelection();
+    }
+
+    function selectDate(val, el) {
+        if (!startDate || (startDate && endDate)) {
+            // Reset jika sudah ada rentang atau baru mulai
+            resetSelection();
+            startDate = val;
+            endDate = null;
+            el.classList.add('selected-bound');
+        } else {
+            // Pilih tanggal akhir
+            if (val < startDate) {
+                endDate = startDate;
+                startDate = val;
+            } else {
+                endDate = val;
+            }
+            highlightRange();
+        }
+    }
+
+    function highlightRange() {
+        const allDays = document.querySelectorAll('.day-num');
+        allDays.forEach(day => {
+            const val = parseInt(day.getAttribute('data-val'));
+            day.classList.remove('selected-bound', 'in-range');
+            
+            if (val === startDate || val === endDate) {
+                day.classList.add('selected-bound');
+            } else if (val > startDate && val < endDate) {
+                day.classList.add('in-range');
+            }
+        });
+    }
+
+    function resetSelection() {
+        startDate = null;
+        endDate = null;
+        document.querySelectorAll('.day-num').forEach(day => {
+            day.classList.remove('selected-bound', 'in-range');
+        });
+    }
+
+    function confirmDate() {
+        if (startDate && endDate) {
+            const rangeText = `${startDate} Mar - ${endDate} Mar`;
+            document.getElementById('dateDisplay').innerText = rangeText;
+            document.getElementById('calendarOverlay').style.display = 'none';
+        } else {
+            alert("Silakan pilih rentang tanggal (Mulai dan Akhir)");
+        }
     }
 </script>
 
