@@ -7,15 +7,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-page: #f4f7f6; /* Warna terang meredam kontras [cite: 41, 93] */
-            --primary-tosca: #40E0D0; /* Tosca Light untuk Header Shape */
-            --btn-color: #4A90E2; /* Tetap menggunakan biru untuk tombol aksi utama [cite: 12, 13] */
-            --text-dark: #333;
+            --bg-page: #f4f7f6;
+            --tosca-light: #40E0D0;
+            --btn-blue: #4A90E2;
             --white: #ffffff;
         }
 
         body {
-            font-family: 'Inter', sans-serif; /* Bukan font Arial [cite: 74, 155] */
+            font-family: 'Inter', sans-serif;
             background-color: var(--bg-page);
             margin: 0;
             display: flex;
@@ -28,40 +27,38 @@
             width: 90%;
             max-width: 380px;
             background: var(--white);
-            border-radius: 20px;
+            border-radius: 25px;
             overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             position: relative;
         }
 
-        /* Shape Tipuan Header dengan warna Tosca Light [cite: 19] */
-       .header-shape {
-            background: #40E0D0; /* Tosca Light */
-            height: 140px; /* Sedikit dipertinggi agar judul lebih leluasa */
+        .header-shape {
+            background: var(--tosca-light);
+            height: 140px;
             width: 150%;
             position: absolute;
-            top: -60px;
+            top: -65px;
             left: -25%;
             border-bottom-left-radius: 50%;
             border-bottom-right-radius: 50%;
             z-index: 1;
         }
 
-        .login-content h2 {
-            font-size: 20px;
-            color: #ffffff; /* Judul Putih */
-            margin: -15px 0 45px 0; /* Menaikkan posisi judul ke area tosca */
-            font-weight: 600;
-            letter-spacing: 1.5px;
+        .login-content {
             position: relative;
+            z-index: 2;
+            padding: 30px 25px;
+            text-align: center;
         }
 
         .login-content h2 {
-            font-size: 19px; /* Penyesuaian ukuran judul untuk layar ponsel [cite: 10] */
-            color: #008080; /* Warna Teal tua agar teks terbaca jelas di atas Tosca */
-            margin-bottom: 40px;
+            font-size: 19px;
+            color: var(--white); /* Judul Putih sesuai revisi tim */
+            margin: 0 0 55px 0; /* Memberi ruang agar teks di area Tosca */
             font-weight: 600;
             letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
         .form-group {
@@ -72,35 +69,34 @@
         .form-label {
             display: block;
             font-size: 12px;
-            font-style: italic; /* Judul kolom italic, tidak bold [cite: 11] */
+            font-style: italic; /* Label miring sesuai panduan */
             color: #555;
             margin-bottom: 8px;
-            padding-left: 5px;
         }
 
         .input-control {
             width: 100%;
             padding: 14px;
-            border: 1px solid #e0e0e0;
+            border: 1px solid #e8e8e8;
             border-radius: 12px;
             font-family: inherit;
-            font-size: 14px; /* Ukuran font mudah dibaca di ponsel [cite: 74] */
+            font-size: 14px;
             box-sizing: border-box;
-            background: #fafafa;
+            background: #fdfdfd;
         }
 
         .btn-login {
             width: 100%;
             padding: 16px;
-            background: var(--btn-color);
+            background: var(--btn-blue);
             color: var(--white);
             border: none;
             border-radius: 12px;
             font-weight: 600;
-            font-size: 15px; /* Size dan font-size bagus [cite: 14] */
+            font-size: 15px;
             cursor: pointer;
             margin-top: 10px;
-            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.2);
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.25);
         }
     </style>
 </head>
@@ -109,16 +105,16 @@
 <div class="login-container">
     <div class="header-shape"></div>
     <div class="login-content">
-        <h2>ADMIN LOGIN</h2>
+        <h2>Admin Login</h2>
         
         <div class="form-group">
             <label class="form-label">Email Admin / Surel Admin:</label>
-            <input type="email" class="input-control" placeholder="admin@email.com" required>
+            <input type="email" class="input-control" placeholder="admin@email.com">
         </div>
 
         <div class="form-group">
             <label class="form-label">Password / Kata Sandi:</label>
-            <input type="password" class="input-control" placeholder="••••••••" required>
+            <input type="password" class="input-control" placeholder="••••••••">
         </div>
 
         <button class="btn-login">LOGIN ADMIN / MASUK</button>
