@@ -9,7 +9,7 @@
         :root { --bg: #f4f7f6; --tosca: #40E0D0; --primary: #4A90E2; --white: #ffffff; --text: #333; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding-bottom: 50px; color: var(--text); }
         
-        /* Navigasi Utama */
+        /* Header */
         header { background: var(--white); padding: 15px; display: flex; align-items: center; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 100; }
         .menu-btn { font-size: 24px; cursor: pointer; background: none; border: none; margin-right: 15px; color: var(--primary); }
         .app-title { font-weight: 600; color: var(--primary); font-size: 16px; }
@@ -19,50 +19,46 @@
         .sidenav a { padding: 15px 25px; text-decoration: none; font-size: 15px; color: #444; display: block; border-bottom: 1px solid #f9f9f9; }
         .sidenav .close-btn { text-align: right; font-size: 30px; display: block; padding: 10px 20px; color: var(--primary); }
 
-        /* Profil Admin */
+        /* Profil Admin dengan Fitur Edit Foto */
         .admin-profile { background: var(--white); padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #eee; }
-        .admin-profile img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--tosca); }
+        .profile-img-container { position: relative; width: 60px; height: 60px; cursor: pointer; }
+        .profile-img-container img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--tosca); }
+        .edit-badge { position: absolute; bottom: 0; right: 0; background: var(--primary); color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 10px; border: 2px solid white; }
+
         .admin-info { font-size: 12px; line-height: 1.4; }
         .admin-info b { display: block; font-size: 14px; color: #333; }
 
         .container { padding: 20px; }
 
-        /* Grouping Filter */
+        /* Filter Section */
         .filter-section { background: var(--white); padding: 18px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
         .label { display: block; font-size: 11px; font-style: italic; color: #777; margin-bottom: 8px; margin-top: 12px; }
-        .label:first-child { margin-top: 0; }
-
-        /* Komponen Kunci: Datepicker Trigger */
+        
         .datepicker-trigger {
             display: flex; align-items: center; background: #fafafa; border: 1px solid #e0e0e0;
             border-radius: 25px; padding: 12px 18px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--primary);
         }
 
-        .input-field { width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 12px; font-size: 13px; box-sizing: border-box; background: #fafafa; outline: none; }
+        .input-field { width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 12px; font-size: 13px; box-sizing: border-box; background: #fafafa; outline: none; appearance: none; }
 
-        /* Dashboard Stats */
+        /* Statistik */
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
         .stat-card { background: var(--tosca); color: #008080; padding: 20px; border-radius: 18px; text-align: center; }
-        .stat-card small { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8; }
+        .stat-card small { font-size: 10px; font-weight: 700; text-transform: uppercase; opacity: 0.8; }
         .stat-card b { font-size: 26px; display: block; margin-top: 5px; }
 
-        /* Action Button */
         .btn-export { width: 100%; padding: 16px; background: #27ae60; color: #fff; border: none; border-radius: 15px; font-weight: 600; cursor: pointer; font-size: 14px; box-shadow: 0 5px 15px rgba(39, 174, 96, 0.2); }
 
-        /* POP-UP CALENDAR (Komponen Kunci) */
-        #calendarOverlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center;
-        }
+        /* DUAL VERTICAL CALENDAR POP-UP */
+        #calendarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; }
         .calendar-popup { width: 88%; max-width: 330px; background: var(--white); border-radius: 25px; padding: 15px; }
-        .nav-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .nav-btn { background: #f5f5f5; border: none; border-radius: 50%; width: 35px; height: 35px; color: var(--primary); font-size: 18px; cursor: pointer; }
-        .month-frame { border: 1px solid var(--tosca); border-radius: 15px; padding: 10px; margin-bottom: 12px; }
-        .month-title { font-size: 12px; font-weight: 700; text-align: center; margin-bottom: 10px; color: #008080; }
+        .nav-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .nav-btn { background: #f0f0f0; border: none; border-radius: 50%; width: 35px; height: 35px; color: var(--primary); cursor: pointer; font-weight: bold; }
+        .month-frame { border: 1px solid var(--tosca); border-radius: 15px; padding: 10px; margin-bottom: 10px; }
+        .month-title { font-size: 12px; font-weight: 700; text-align: center; margin-bottom: 8px; color: #008080; text-transform: uppercase; }
         .vertical-grid { display: grid; grid-template-rows: repeat(7, 1fr); grid-auto-flow: column; gap: 4px; font-size: 11px; }
-        .d-name { font-weight: 800; color: var(--primary); text-align: center; padding: 5px; border-right: 1px solid #eee; background: #fdfdfd; }
+        .d-name { font-weight: 800; color: var(--primary); text-align: center; padding: 6px 4px; border-right: 1px solid #eee; background: #fdfdfd; }
         .d-num { text-align: center; padding: 10px 0; border-radius: 8px; cursor: pointer; color: #555; }
-        .d-num.empty { cursor: default; }
         .d-num.active-bound { background: var(--primary) !important; color: white !important; font-weight: bold; }
         .d-num.in-between { background: rgba(64, 224, 208, 0.3); color: #008080; }
         .popup-footer { display: flex; gap: 10px; margin-top: 10px; }
@@ -71,13 +67,15 @@
 </head>
 <body>
 
+<input type="file" id="photoInput" style="display:none" accept="image/*" onchange="previewProfile(event)">
+
 <div id="mySidenav" class="sidenav">
     <a href="javascript:void(0)" class="close-btn" onclick="closeNav()">&times;</a>
     <a href="dashboard_admin.html" style="font-weight:600; color:var(--primary);">📊 Dashboard Analytics</a>
     <a href="post_editor_staff.html">📝 Post Editor</a>
     <a href="admin_revenue.html">💰 Revenue Tracking</a>
     <a href="admin_chat_bantuan.html">💬 Chat Bantuan</a>
-    <a href="user_login.html" style="color:#e74c3c; margin-top: 30px;">🚪 Keluar / Logout</a>
+    <a href="user_login.html" style="color:#e74c3c; margin-top: 30px;">🚪 Keluar</a>
 </div>
 
 <header>
@@ -86,7 +84,10 @@
 </header>
 
 <div class="admin-profile">
-    <img src="https://via.placeholder.com/100" alt="Admin">
+    <div class="profile-img-container" onclick="document.getElementById('photoInput').click()">
+        <img id="profilePic" src="https://via.placeholder.com/100" alt="Admin">
+        <div class="edit-badge">✎</div>
+    </div>
     <div class="admin-info">
         <small style="color:var(--primary); font-weight:600;">ACCESS: STAF ADMIN</small>
         <b>M. Ali Ridho</b>
@@ -96,16 +97,15 @@
 
 <div class="container">
     <div class="filter-section">
-        <label class="label">Rentang Tanggal / Date Range:</label>
+        <label class="label">Rentang Tanggal Laporan:</label>
         <div class="datepicker-trigger" onclick="openCalendar()">
-            <span id="displayRange">Pilih Periode Laporan</span>
+            <span id="displayRange">Pilih Rentang Tanggal</span>
         </div>
 
         <label class="label">Negara / Country:</label>
         <select class="input-field">
-            <option>Semua Negara / All Countries</option>
+            <option>Semua Negara</option>
             <option>Indonesia (+62)</option>
-            <option>Mexico (+52)</option>
         </select>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
@@ -123,23 +123,17 @@
                     <option>Semua Role</option>
                     <option>Trial</option>
                     <option>Pro</option>
-                </select>
+                    <option>Multi</option> <option>Team</option>  </select>
             </div>
         </div>
     </div>
 
     <div class="stat-grid">
-        <div class="stat-card">
-            <small>Total User</small>
-            <b id="totalUser">1.240</b>
-        </div>
-        <div class="stat-card">
-            <small>User Aktif</small>
-            <b id="activeUser">856</b>
-        </div>
+        <div class="stat-card"><small>Total User</small><b>1.240</b></div>
+        <div class="stat-card"><small>User Aktif</small><b>856</b></div>
     </div>
 
-    <button class="btn-export" onclick="alert('Exporting to .xlsx...')">EXPORT TO EXCEL (.xlsx)</button>
+    <button class="btn-export">EXPORT DATA (.xlsx)</button>
 </div>
 
 <div id="calendarOverlay">
@@ -158,9 +152,15 @@
 </div>
 
 <script>
-    /* Navigasi */
+    /* Navigasi & UI */
     function openNav() { document.getElementById("mySidenav").style.width = "280px"; }
     function closeNav() { document.getElementById("mySidenav").style.width = "0"; }
+    
+    function previewProfile(event) {
+        const reader = new FileReader();
+        reader.onload = function() { document.getElementById('profilePic').src = reader.result; }
+        reader.readAsDataURL(event.target.files[0]);
+    }
 
     /* Logic Kalender Kunci */
     let startDate = null; let endDate = null;
@@ -184,8 +184,7 @@
         const frame = document.createElement('div');
         frame.className = 'month-frame';
         const title = document.createElement('div');
-        title.className = 'month-title';
-        title.innerText = `${months[month]} ${year}`;
+        title.className = 'month-title'; title.innerText = `${months[month]} ${year}`;
         frame.appendChild(title);
 
         const grid = document.createElement('div');
