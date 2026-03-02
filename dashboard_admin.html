@@ -4,320 +4,91 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Admin - WA-Sender v4.0</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-soft: #f4f7f6; /* Warna terang lembut */
-            --primary: #4A90E2;
-            --secondary: #f39c12;
-            --danger: #e74c3c;
-            --success: #27ae60;
-            --text-dark: #333;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            background: var(--bg-soft);
-            color: var(--text-dark);
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        /* Header & Nav */
-        header {
-            background: white;
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid #ddd;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .menu-btn {
-            font-size: 24px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            margin-right: 15px;
-            color: var(--text-dark);
-        }
-
-        .app-title {
-            font-weight: 600;
-            font-size: 18px;
-            flex-grow: 1;
-        }
-
-        /* Slide-out Navigation */
-        .sidenav {
-            height: 100%;
-            width: 0;
-            position: fixed;
-            z-index: 1000;
-            top: 0;
-            left: 0;
-            background-color: white;
-            overflow-x: hidden;
-            transition: 0.3s;
-            box-shadow: 2px 0 15px rgba(0,0,0,0.1);
-        }
-
-        .sidenav-header {
-            padding: 20px;
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .closebtn {
-            font-size: 30px;
-            cursor: pointer;
-            color: #888;
-        }
-
-        .admin-profile-box {
-            padding: 0 20px 20px 20px;
-            text-align: center;
-            border-bottom: 1px solid #eee;
-        }
-
-        .profile-img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--primary);
-            background: #eee;
-            margin-bottom: 10px;
-        }
-
-        .admin-info h4 { margin: 0; font-size: 16px; font-weight: 600; }
-        .admin-info p { margin: 5px 0 0; font-size: 12px; color: #888; }
-
-        .nav-links { padding-top: 10px; }
-        .nav-links a {
-            padding: 15px 25px;
-            text-decoration: none;
-            font-size: 15px;
-            color: #444;
-            display: block;
-            transition: 0.2s;
-            border-bottom: 1px solid #f9f9f9;
-        }
-
-        .nav-links a:active { background: #f0f7ff; color: var(--primary); }
-
-        /* Area Khusus Admin-Zero */
-        #zeroSection {
-            display: none;
-            background: #fffdf0;
-            margin-top: 10px;
-            border-top: 2px solid var(--secondary);
-        }
-
-        .section-label {
-            padding: 10px 25px 5px;
-            font-size: 11px;
-            font-weight: bold;
-            color: var(--secondary);
-            text-transform: uppercase;
-        }
-
-        /* Main Content */
-        .main-content { padding: 20px; }
-
-        .filter-card {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-            margin-bottom: 20px;
-        }
-
-        .filter-card h3 { margin: 0 0 15px 0; font-size: 16px; }
-
-        .filter-group { margin-bottom: 15px; }
-        label { display: block; font-size: 12px; font-weight: 600; color: #666; margin-bottom: 5px; }
+        :root { --bg: #f4f7f6; --tosca: #40E0D0; --primary: #4A90E2; --white: #ffffff; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding-bottom: 50px; }
         
-        select, input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 14px;
-            box-sizing: border-box;
-        }
+        /* Header & Nav */
+        header { background: var(--white); padding: 15px; display: flex; align-items: center; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 100; }
+        .menu-btn { font-size: 24px; cursor: pointer; background: none; border: none; margin-right: 15px; }
+        .app-title { font-weight: 600; color: var(--primary); }
 
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        /* ID Admin Section */
+        .admin-id { background: var(--white); padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #eee; }
+        .admin-id img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--tosca); }
+        .admin-info { font-size: 13px; }
+        .admin-info b { display: block; font-size: 15px; }
 
-        .btn-action {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 10px;
-            font-size: 14px;
-        }
+        .container { padding: 20px; }
+        .filter-card { background: var(--white); padding: 15px; border-radius: 15px; margin-bottom: 20px; }
+        .label { display: block; font-size: 11px; font-style: italic; color: #666; margin-bottom: 5px; }
+        .input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 12px; font-size: 13px; box-sizing: border-box; }
+        
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: var(--tosca); color: #008080; padding: 15px; border-radius: 12px; text-align: center; }
+        .stat-card small { font-size: 10px; display: block; margin-bottom: 5px; }
+        .stat-card b { font-size: 20px; }
 
-        .btn-export { background: var(--success); color: white; }
-        .btn-logout { background: var(--danger); color: white; margin-top: 30px; }
+        .btn-export { width: 100%; padding: 15px; background: #27ae60; color: #fff; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 13px; }
 
-        /* Stats Display */
-        .stats-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .stat-box {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-        }
-
-        .stat-box h2 { margin: 0; color: var(--primary); font-size: 24px; }
-        .stat-box p { margin: 5px 0 0; font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; }
-
+        /* Sidenav */
+        .sidenav { height: 100%; width: 0; position: fixed; z-index: 1000; top: 0; left: 0; background-color: var(--white); overflow-x: hidden; transition: 0.3s; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
+        .sidenav a { padding: 15px 25px; text-decoration: none; font-size: 15px; color: #444; display: block; border-bottom: 1px solid #f9f9f9; }
     </style>
 </head>
 <body>
 
-    <div id="mySidenav" class="sidenav">
-        <div class="sidenav-header">
-            <span class="closebtn" onclick="closeNav()">&times;</span>
-        </div>
-        
-        <div class="admin-profile-box">
-            <img src="https://via.placeholder.com/80" id="adminAvatar" class="profile-img">
-            <div class="admin-info">
-                <h4 id="adminRoleName">Staff Admin</h4>
-                <p id="adminEmailDisplay">loading@wasender.com</p>
-            </div>
-        </div>
+<div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" onclick="closeNav()" style="padding: 20px; text-align: right; font-size: 30px;">&times;</a>
+    <a href="dashboard_admin.html" style="font-weight:600; color:var(--primary);">📊 Dashboard</a>
+    <a href="post_editor_staff.html">📝 Post Editor</a>
+    <a href="admin_revenue.html">💰 Revenue Tracking</a>
+    <a href="admin_chat_bantuan.html">💬 Chat Bantuan</a>
+    <a href="user_login.html" style="color:red; margin-top:20px;">🚪 Logout</a>
+</div>
 
-        <div class="nav-links">
-            <a href="dashboard_admin.html">📊 Dashboard Utama</a>
-            <a href="admin_account.html">👤 Admin Account</a>
-            <a href="post_editor_zero.html">📝 Post Editor & History</a>
-            <a href="admin_revenue.html">💰 Revenue Tracking</a>
-            <a href="admin_chat_bantuan.html">💬 Chat Bantuan User</a>
+<header>
+    <button class="menu-btn" onclick="openNav()">☰</button>
+    <div class="app-title">WA-Sender v4.0</div>
+</header>
 
-            <div id="zeroSection">
-                <div class="section-label">Owner Privilege</div>
-                <a href="setting_bank.html">🏦 Setting Bank & Revenue</a>
-                <a href="admin_management.html">🔑 Manage Admin Accounts</a>
-            </div>
+<div class="admin-id">
+    <img src="https://via.placeholder.com/100" alt="Admin">
+    <div class="admin-info">
+        <small style="color:var(--primary); font-weight:600;">STAF ADMIN</small>
+        <b>Nama Admin</b>
+        <span>admin@email.com</span>
+    </div>
+</div>
 
-            <div style="padding: 0 20px;">
-                <button class="btn-action btn-logout" onclick="handleLogout()">LOGOUT / KELUAR</button>
-            </div>
+<div class="container">
+    <h3 style="font-size: 16px; margin: 0 0 15px;">DASHBOARD ANALYTICS</h3>
+    
+    <div class="filter-card">
+        <label class="label">Rentang Tanggal Kustom / Custom Date Range:</label>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <input type="date" class="input">
+            <input type="date" class="input">
         </div>
+        <label class="label">Pilih Negara / Select Country:</label>
+        <select class="input">
+            <option>Semua Negara / All Countries</option>
+            <option>Indonesia (+62)</option>
+        </select>
     </div>
 
-    <header>
-        <button class="menu-btn" onclick="openNav()">☰</button>
-        <div class="app-title">WA-Sender v4.0</div>
-    </header>
-
-    <div class="main-content">
-        <div class="stats-container">
-            <div class="stat-box">
-                <h2 id="totalUserCount">0</h2>
-                <p>Total User</p>
-            </div>
-            <div class="stat-box">
-                <h2 id="activeUserCount">0</h2>
-                <p>User Aktif</p>
-            </div>
-        </div>
-
-        <div class="filter-card">
-            <h3>Filter Data User</h3>
-            
-            <div class="filter-group">
-                <label>Rentang Tanggal:</label>
-                <div class="grid-2">
-                    <input type="date" id="startDate">
-                    <input type="date" id="endDate">
-                </div>
-            </div>
-
-            <div class="filter-group">
-                <label>Negara / Country:</label>
-                <select id="filterCountry">
-                    <option value="All">Semua Negara</option>
-                    </select>
-            </div>
-
-            <div class="grid-2">
-                <div class="filter-group">
-                    <label>Status:</label>
-                    <select id="filterStatus">
-                        <option value="All">Semua</option>
-                        <option value="Aktif">Aktif</option>
-                        <option value="Tidak Aktif">Tidak Aktif</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>Role:</label>
-                    <select id="filterRole">
-                        <option value="All">Semua</option>
-                        <option value="Trial">Trial</option>
-                        <option value="Pro">Pro</option>
-                        <option value="Multi">Multi</option>
-                        <option value="Team">Team</option>
-                    </select>
-                </div>
-            </div>
-
-            <button class="btn-action btn-export" onclick="exportData()">EXPORT TO EXCEL (.xlsx)</button>
-        </div>
+    <div class="stat-grid">
+        <div class="stat-card"><small>TOTAL USER</small><b>0</b></div>
+        <div class="stat-card"><small>USER AKTIF</small><b>0</b></div>
     </div>
 
-    <script>
-        const _supabase = supabase.createClient('https://fdvjaulucahzmmmdwkau.supabase.co', 'sb_publishable_yN4AQrZGQEH8tzhkCsLf2g_KGoakIFa');
+    <button class="btn-export">EXPORT TO EXCEL (.xlsx)</button>
+</div>
 
-        // Fungsi Navigasi
-        function openNav() { document.getElementById("mySidenav").style.width = "300px"; }
-        function closeNav() { document.getElementById("mySidenav").style.width = "0"; }
-
-        // Cek Role & Email (Admin-Zero)
-        async function initAdmin() {
-            const { data: { user } } = await _supabase.auth.getUser();
-            if (user) {
-                document.getElementById('adminEmailDisplay').innerText = user.email;
-                if (user.email === 'adeali490@gmail.com') { [cite: 1]
-                    document.getElementById('zeroSection').style.display = 'block';
-                    document.getElementById('adminRoleName').innerText = "Admin-Zero (Owner)";
-                }
-            } else {
-                window.location.href = 'admin_login.html';
-            }
-        }
-
-        async function handleLogout() {
-            await _supabase.auth.signOut();
-            window.location.href = 'admin_login.html';
-        }
-
-        // Placeholder Fungsi Export
-        function exportData() {
-            alert("Fitur Export Excel sedang memproses data sesuai filter...");
-            // Logika XLSX.js akan memproses tabel user_profiles di sini
-        }
-
-        // Jalankan saat load
-        initAdmin();
-    </script>
+<script>
+    function openNav() { document.getElementById("mySidenav").style.width = "280px"; }
+    function closeNav() { document.getElementById("mySidenav").style.width = "0"; }
+</script>
 </body>
 </html>
