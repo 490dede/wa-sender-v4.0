@@ -7,14 +7,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-page: #f4f7f6;
-            --primary: #4A90E2;
+            --bg-page: #f4f7f6; /* Warna terang meredam kontras [cite: 41, 93] */
+            --primary-tosca: #40E0D0; /* Tosca Light untuk Header Shape */
+            --btn-color: #4A90E2; /* Tetap menggunakan biru untuk tombol aksi utama [cite: 12, 13] */
             --text-dark: #333;
             --white: #ffffff;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', sans-serif; /* Bukan font Arial [cite: 74, 155] */
             background-color: var(--bg-page);
             margin: 0;
             display: flex;
@@ -23,7 +24,6 @@
             height: 100vh;
         }
 
-        /* Shape Tipuan Header */
         .login-container {
             width: 90%;
             max-width: 380px;
@@ -34,8 +34,9 @@
             position: relative;
         }
 
+        /* Shape Tipuan Header dengan warna Tosca Light [cite: 19] */
         .header-shape {
-            background: var(--primary);
+            background: var(--primary-tosca);
             height: 120px;
             width: 150%;
             position: absolute;
@@ -54,10 +55,11 @@
         }
 
         .login-content h2 {
-            font-size: 20px;
-            color: var(--white);
+            font-size: 19px; /* Penyesuaian ukuran judul untuk layar ponsel [cite: 10] */
+            color: #008080; /* Warna Teal tua agar teks terbaca jelas di atas Tosca */
             margin-bottom: 40px;
             font-weight: 600;
+            letter-spacing: 1px;
         }
 
         .form-group {
@@ -67,9 +69,9 @@
 
         .form-label {
             display: block;
-            font-size: 13px;
-            font-style: italic; /* Judul kolom tidak bold tapi italic */
-            color: #666;
+            font-size: 12px;
+            font-style: italic; /* Judul kolom italic, tidak bold [cite: 11] */
+            color: #555;
             margin-bottom: 8px;
             padding-left: 5px;
         }
@@ -80,7 +82,7 @@
             border: 1px solid #e0e0e0;
             border-radius: 12px;
             font-family: inherit;
-            font-size: 14px;
+            font-size: 14px; /* Ukuran font mudah dibaca di ponsel [cite: 74] */
             box-sizing: border-box;
             background: #fafafa;
         }
@@ -88,15 +90,15 @@
         .btn-login {
             width: 100%;
             padding: 16px;
-            background: var(--primary);
+            background: var(--btn-color);
             color: var(--white);
             border: none;
             border-radius: 12px;
             font-weight: 600;
-            font-size: 15px;
+            font-size: 15px; /* Size dan font-size bagus [cite: 14] */
             cursor: pointer;
             margin-top: 10px;
-            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.2);
         }
     </style>
 </head>
@@ -109,12 +111,12 @@
         
         <div class="form-group">
             <label class="form-label">Email Admin / Surel Admin:</label>
-            <input type="email" class="input-control" placeholder="admin@email.com">
+            <input type="email" class="input-control" placeholder="admin@email.com" required>
         </div>
 
         <div class="form-group">
             <label class="form-label">Password / Kata Sandi:</label>
-            <input type="password" class="input-control" placeholder="••••••••">
+            <input type="password" class="input-control" placeholder="••••••••" required>
         </div>
 
         <button class="btn-login">LOGIN ADMIN / MASUK</button>
