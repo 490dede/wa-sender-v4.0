@@ -6,30 +6,129 @@
     <title>User Login - WA-Sender v4.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #f4f7f6; --tosca: #40E0D0; --primary: #4A90E2; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .card { width: 90%; max-width: 380px; background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05); position: relative; }
-        .header-shape { background: var(--tosca); height: 100px; width: 150%; position: absolute; top: -40px; left: -25%; border-radius: 50%; z-index: 1; }
-        .content { position: relative; z-index: 2; padding: 30px 25px; }
-        h2 { font-size: 18px; color: #008080; text-align: center; margin-bottom: 30px; }
-        .label { display: block; font-size: 11px; font-style: italic; color: #666; margin-bottom: 5px; }
-        .input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 14px; box-sizing: border-box; margin-bottom: 15px; }
-        .btn { width: 100%; padding: 14px; background: var(--primary); color: #fff; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 14px; }
-        .footer-link { text-align: center; font-size: 12px; margin-top: 20px; color: #777; }
+        :root {
+            --bg-page: #f4f7f6;
+            --tosca-light: #40E0D0;
+            --btn-blue: #4A90E2;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-page);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            width: 90%;
+            max-width: 380px;
+            background: var(--white);
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            position: relative;
+        }
+
+        .header-shape {
+            background: var(--tosca-light);
+            height: 130px;
+            width: 150%;
+            position: absolute;
+            top: -65px;
+            left: -25%;
+            border-bottom-left-radius: 50%;
+            border-bottom-right-radius: 50%;
+            z-index: 1;
+        }
+
+        .login-content {
+            position: relative;
+            z-index: 2;
+            padding: 30px 25px;
+            text-align: center;
+        }
+
+        .login-content h2 {
+            font-size: 19px;
+            color: var(--white);
+            margin: 0 0 50px 0;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 11px;
+            font-style: italic;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .input-control {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #e8e8e8;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 14px;
+            box-sizing: border-box;
+            background: #fafafa;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 16px;
+            background: var(--btn-blue);
+            color: var(--white);
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .footer-text {
+            text-align: center;
+            font-size: 12px;
+            margin-top: 25px;
+            color: #888;
+        }
     </style>
 </head>
 <body>
-<div class="card">
+
+<div class="login-container">
     <div class="header-shape"></div>
-    <div class="content">
-        <h2>USER LOGIN</h2>
-        <label class="label">Email / Surel:</label>
-        <input type="email" class="input" placeholder="Enter your email">
-        <label class="label">Password / Kata Sandi:</label>
-        <input type="password" class="input" placeholder="Enter your password">
-        <button class="btn">LOGIN / MASUK</button>
-        <div class="footer-link">Belum punya akun? <a href="user_register.html" style="color:var(--primary);">Daftar di sini</a></div>
+    <div class="login-content">
+        <h2>User Login</h2>
+        
+        <div class="form-group">
+            <label class="form-label">Email / Surel:</label>
+            <input type="email" class="input-control" placeholder="Enter your email">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Password / Kata Sandi:</label>
+            <input type="password" class="input-control" placeholder="Enter your password">
+        </div>
+
+        <button class="btn-login">LOGIN / MASUK</button>
+        
+        <div class="footer-text">
+            Belum punya akun? <a href="user_register.html" style="color: var(--btn-blue); text-decoration: none; font-weight: 600;">Daftar di sini</a>
+        </div>
     </div>
 </div>
+
 </body>
 </html>
