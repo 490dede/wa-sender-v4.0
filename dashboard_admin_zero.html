@@ -1,135 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin-Zero - WA-Sender v4.0</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <title>Dashboard Zero - WA-Sender v4.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; margin: 0; background: #f4f7f6; }
-        .sidebar { width: 250px; height: 100vh; background: #333; color: white; position: fixed; padding: 20px; box-sizing: border-box; }
-        .content { margin-left: 250px; padding: 20px; }
-        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-        th { background: #eee; }
-        .btn { padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; color: white; }
-        .btn-add { background: #68a058; }
-        .btn-bank { background: #f39c12; width: 100%; margin-top: 10px; }
-        .btn-delete { background: #e74c3c; padding: 5px 10px; }
-        @media (max-width: 600px) {
-            .sidebar { width: 100%; height: auto; position: relative; }
-            .content { margin-left: 0; }
-        }
+        :root { --bg: #f4f7f6; --tosca: #40E0D0; --primary: #4A90E2; --white: #ffffff; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding-bottom: 50px; }
+        header { background: var(--white); padding: 15px; display: flex; align-items: center; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 100; }
+        .menu-btn { font-size: 24px; cursor: pointer; background: none; border: none; margin-right: 15px; }
+        .admin-id { background: var(--white); padding: 20px; border-bottom: 1px solid #eee; }
+        .admin-id b { font-size: 18px; color: #008080; }
+        .container { padding: 20px; }
+        .filter-card { background: var(--white); padding: 15px; border-radius: 15px; margin-bottom: 20px; }
+        .label { display: block; font-size: 11px; font-style: italic; color: #666; margin-bottom: 5px; }
+        .input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 12px; font-size: 13px; box-sizing: border-box; }
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: var(--tosca); color: #008080; padding: 15px; border-radius: 12px; text-align: center; }
+        .btn-export { width: 100%; padding: 15px; background: #27ae60; color: #fff; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 13px; }
+        .sidenav { height: 100%; width: 0; position: fixed; z-index: 1000; top: 0; left: 0; background-color: var(--white); overflow-x: hidden; transition: 0.3s; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
+        .sidenav a { padding: 15px 25px; text-decoration: none; font-size: 15px; color: #444; display: block; border-bottom: 1px solid #f9f9f9; }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <h3>Admin-Zero Panel</h3>
-        <p>Email: adeali490@gmail.com</p>
-        <hr>
-        <button class="btn btn-bank" onclick="location.href='setting_bank.html'">
-            SETTING BANK (QRIS & PAYPAL)
-        </button>
-        <button class="btn btn-bank" style="background:#c0392b; margin-top:50px;" onclick="handleLogout()">
-            LOGOUT / KELUAR
-        </button>
-    </div>
+<div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" onclick="closeNav()" style="padding: 20px; text-align: right; font-size: 30px;">&times;</a>
+    <a href="dashboard_admin_zero.html" style="font-weight:600; color:var(--primary);">📊 Dashboard Zero</a>
+    <a href="admin_management.html">🔑 Manage Admin</a>
+    <a href="setting_bank.html">🏦 Bank & QRIS</a>
+    <a href="post_editor_zero.html">📝 Post Editor (Zero)</a>
+    <a href="admin_revenue.html">💰 Revenue</a>
+    <a href="admin_chat_bantuan.html">💬 Chat Bantuan</a>
+</div>
 
-    <div class="content">
-        <h2>Dashboard Admin-Zero / Panel Utama</h2>
+<header>
+    <button class="menu-btn" onclick="openNav()">☰</button>
+    <div style="font-weight:600; color:var(--primary);">WA-Sender v4.0</div>
+</header>
 
-        <div class="card">
-            <h3>Manajemen Negara / Country Management</h3>
-            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <input type="text" id="newCode" placeholder="Code (e.g. +62)" style="padding: 10px; flex: 1;">
-                <input type="text" id="newName" placeholder="Country Name" style="padding: 10px; flex: 2;">
-                <button class="btn btn-add" onclick="addCountry()">ADD / TAMBAH</button>
-            </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Code / Kode</th>
-                        <th>Country / Negara</th>
-                        <th>Action / Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="countryTableBody"></tbody>
-            </table>
+<div class="admin-id">
+    <small style="color:var(--primary); font-weight:600;">ACCESS LEVEL:</small><br>
+    <b>Admin-Zero</b>
+</div>
+
+<div class="container">
+    <h3 style="font-size: 16px; margin: 0 0 15px;">OWNER ANALYTICS</h3>
+    <div class="filter-card">
+        <label class="label">Rentang Tanggal Kustom / Custom Date Range:</label>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <input type="date" class="input">
+            <input type="date" class="input">
         </div>
-
-        <div class="card">
-            <h3>Daftar User / User List (View Only)</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Username</th>
-                        <th>WhatsApp</th>
-                        <th>Category / Kategori</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody id="userTableBody"></tbody>
-            </table>
-        </div>
+        <label class="label">Pilih Negara / Select Country:</label>
+        <select class="input">
+            <option>Semua Negara / All Countries</option>
+        </select>
     </div>
+    <div class="stat-grid">
+        <div class="stat-card"><small>TOTAL USER</small><br><b>0</b></div>
+        <div class="stat-card"><small>USER AKTIF</small><br><b>0</b></div>
+    </div>
+    <button class="btn-export">EXPORT TO EXCEL (.xlsx)</button>
+</div>
 
-    <script>
-        const _supabase = supabase.createClient('https://fdvjaulucahzmmmdwkau.supabase.co', 'sb_publishable_yN4AQrZGQEH8tzhkCsLf2g_KGoakIFa');
-
-        // 1. Load Data Negara
-        async function loadCountries() {
-            const { data } = await _supabase.from('countries').select('*').order('country_name');
-            const tbody = document.getElementById('countryTableBody');
-            tbody.innerHTML = data.map(c => `
-                <tr>
-                    <td>${c.country_code}</td>
-                    <td>${c.country_name}</td>
-                    <td><button class="btn btn-delete" onclick="deleteCountry('${c.id}')">Delete</button></td>
-                </tr>
-            `).join('');
-        }
-
-        // 2. Tambah Negara
-        async function addCountry() {
-            const code = document.getElementById('newCode').value;
-            const name = document.getElementById('newName').value;
-            if(!code || !name) return alert("Fill all fields / Isi semua kolom");
-            
-            await _supabase.from('countries').insert([{ country_code: code, country_name: name }]);
-            location.reload();
-        }
-
-        // 3. Hapus Negara
-        async function deleteCountry(id) {
-            if(confirm("Are you sure? / Yakin ingin menghapus?")) {
-                await _supabase.from('countries').delete().eq('id', id);
-                loadCountries();
-            }
-        }
-
-        // 4. Load Data User (View Only)
-        async function loadUsers() {
-            const { data } = await _supabase.from('user_profiles').select('*');
-            const tbody = document.getElementById('userTableBody');
-            tbody.innerHTML = data.map(u => `
-                <tr>
-                    <td>${u.username}</td>
-                    <td>${u.kode_negara}${u.nomor_whatsapp}</td>
-                    <td>${u.kategori_user}</td>
-                    <td>${u.status_user}</td>
-                </tr>
-            `).join('');
-        }
-
-        async function handleLogout() {
-            await _supabase.auth.signOut();
-            window.location.href = 'admin_login.html';
-        }
-
-        loadCountries();
-        loadUsers();
-    </script>
+<script>
+    function openNav() { document.getElementById("mySidenav").style.width = "280px"; }
+    function closeNav() { document.getElementById("mySidenav").style.width = "0"; }
+</script>
 </body>
 </html>
