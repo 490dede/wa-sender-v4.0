@@ -14,6 +14,7 @@
             --white: #ffffff;
             --text-dark: #2c3e50;
             --text-muted: #7f8c8d;
+            --accent: #f1c40f;
         }
 
         body {
@@ -22,9 +23,10 @@
             margin: 0;
             color: var(--text-dark);
             padding-bottom: 50px;
+            font-size: 14px; /* Ukuran font standar yang nyaman di mata */
         }
 
-        /* Sidenav Custom (Scrollable) */
+        /* Sidenav Scrollable */
         .sidenav {
             height: 100%; width: 0; position: fixed; z-index: 2001;
             top: 0; left: 0; background-color: var(--white);
@@ -42,63 +44,94 @@
             position: sticky; top: 0; z-index: 1000;
         }
 
-        .container { padding: 20px; max-width: 500px; margin: auto; }
+        .container { padding: 15px; max-width: 500px; margin: auto; }
 
         /* Card Estimasi Pendapatan */
         .revenue-card {
             background: linear-gradient(135deg, var(--primary), #9b59b6);
             border-radius: 20px;
-            padding: 25px;
+            padding: 20px;
             color: white;
             text-align: center;
-            margin-bottom: 25px;
-            box-shadow: 0 10px 20px rgba(142, 68, 173, 0.2);
+            margin-bottom: 20px;
+            box-shadow: 0 8px 15px rgba(142, 68, 173, 0.2);
         }
-        .revenue-amount { font-size: 28px; font-weight: 700; margin-top: 10px; }
+        .revenue-amount { font-size: 26px; font-weight: 700; margin-top: 8px; }
 
-        /* Filter Section */
+        /* Filter Group */
         .filter-group {
             background: var(--white);
-            border-radius: 15px;
-            padding: 15px;
+            border-radius: 20px;
+            padding: 18px;
             margin-bottom: 20px;
             border: 1px solid #eee;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
         }
-        .filter-label { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; display: block; }
+        .filter-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; display: block; letter-spacing: 0.5px; }
         
         select {
-            width: 100%; padding: 12px; border-radius: 10px;
-            border: 1px solid #ddd; background: #fafafa;
+            width: 100%; padding: 12px; border-radius: 12px;
+            border: 1.5px solid #eee; background: #fafafa;
             font-family: 'Inter', sans-serif; font-size: 14px; margin-bottom: 15px;
+            outline: none; color: var(--text-dark);
         }
 
-        /* Dual Vertical Calendar-Grid */
-        .calendar-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .date-box {
-            background: #fff; border: 1.5px solid var(--primary);
-            border-radius: 12px; padding: 10px; text-align: center;
+        /* DESAIN DUAL VERTICAL CALENDAR-GRID */
+        .dual-calendar-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
         }
-        .date-box input { border: none; width: 100%; font-size: 13px; text-align: center; color: var(--primary); font-weight: 600; }
+        .calendar-box {
+            background: #fff;
+            border: 2px solid #eef2f7;
+            border-radius: 15px;
+            padding: 10px;
+            transition: 0.3s;
+        }
+        .calendar-box:focus-within { border-color: var(--primary); }
+        .calendar-box span { font-size: 9px; font-weight: 800; color: var(--primary); display: block; margin-bottom: 5px; }
+        .calendar-box input { 
+            border: none; width: 100%; font-size: 13px; font-weight: 700; 
+            color: var(--text-dark); outline: none; background: transparent;
+        }
+        .mini-dots {
+            display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; margin-top: 8px; border-top: 1px solid #f5f5f5; padding-top: 8px;
+        }
+        .dot { width: 4px; height: 4px; background: #ddd; border-radius: 50%; margin: auto; }
 
-        /* Payment List & Cards */
-        .payment-list { margin-top: 20px; }
+        /* Payment List & Card */
         .payment-card {
             background: var(--white);
-            border-radius: 15px;
+            border-radius: 18px;
             padding: 15px;
             margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-left: 5px solid var(--secondary);
+            border: 1px solid #f0f0f0;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.2s ease;
         }
-        .payment-card:active { transform: scale(0.98); }
-        .user-info { display: flex; flex-direction: column; }
-        .username { font-weight: 600; font-size: 15px; }
+        .payment-card:active { transform: scale(0.97); background: #f9f9f9; }
+        .user-info { display: flex; flex-direction: column; gap: 2px; }
+        .username { font-weight: 700; font-size: 15px; color: var(--text-dark); }
         .email { font-size: 12px; color: var(--text-muted); }
-        .badge-pkg { font-size: 10px; padding: 4px 8px; border-radius: 20px; background: #e8f5e9; color: var(--secondary); font-weight: bold; }
+        .pay-meta { font-size: 11px; color: var(--primary); font-weight: 600; margin-top: 4px; }
+        
+        .pay-status { text-align: right; }
+        .badge-pkg { 
+            font-size: 10px; padding: 4px 10px; border-radius: 12px; 
+            background: #f1f8ff; color: #007bff; font-weight: 800; 
+        }
+        .amount { font-weight: 800; font-size: 15px; margin-top: 5px; color: var(--secondary); }
+
+        .btn-apply {
+            width: 100%; padding: 15px; background: var(--primary); color: white;
+            border: none; border-radius: 15px; font-weight: 700; font-size: 14px;
+            cursor: pointer; box-shadow: 0 4px 12px rgba(142, 68, 173, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -114,57 +147,68 @@
 </div>
 
 <header>
-    <i class="fas fa-bars" style="font-size:20px; cursor:pointer;" onclick="openNav()"></i>
-    <span style="margin-left: 15px; font-weight: 600;">Revenue Tracking</span>
+    <i class="fas fa-bars" style="font-size:20px; cursor:pointer; color:var(--primary);" onclick="openNav()"></i>
+    <span style="margin-left: 15px; font-weight: 700; letter-spacing: -0.5px;">Revenue Tracking</span>
 </header>
 
 <div class="container">
     <div class="revenue-card">
-        <div style="font-size: 14px; opacity: 0.9;">TOTAL PENDAPATAN (FILTERED)</div>
+        <div style="font-size: 12px; font-weight: 600; letter-spacing: 1px; opacity: 0.8;">PENDAPATAN TERFILTER</div>
         <div class="revenue-amount" id="totalDisplay">Rp 0</div>
     </div>
 
     <div class="filter-group">
-        <span class="filter-label">MATA UANG</span>
+        <span class="filter-label">Filter Pembayaran Berdasarkan Paket</span>
+        <select id="packageFilter">
+            <option value="all">Semua Paket (PRO & MULTI)</option>
+            <option value="PRO">Hanya Paket PRO</option>
+            <option value="MULTI">Hanya Paket MULTI</option>
+            <option value="PROMO">Hanya Aktifitas Promosi</option>
+        </select>
+
+        <span class="filter-label">Filter Berdasarkan Mata Uang (Currency)</span>
         <select id="currencyFilter">
             <option value="IDR">Rupiah (IDR)</option>
             <option value="USD">US Dollar (US$)</option>
             <option value="EUR">Euro (€)</option>
-        </select>
+            </select>
 
-        <span class="filter-label">PAKET LANGGANAN / PROMO</span>
-        <select id="packageFilter">
-            <option value="all">Semua Paket</option>
-            <option value="PRO">Paket PRO</option>
-            <option value="MULTI">Paket MULTI</option>
-            <option value="PROMO">Event Promosi Khusus</option>
-        </select>
-
-        <span class="filter-label">RENTANG TANGGAL PEMBAYARAN</span>
-        <div class="calendar-container">
-            <div class="date-box">
-                <span style="font-size: 10px;">MULAI</span>
-                <input type="date" id="startDate">
+        <span class="filter-label">Rentang Tanggal Kustom (Cek Revenue)</span>
+        <div class="dual-calendar-grid">
+            <div class="calendar-box">
+                <span>DARI TANGGAL</span>
+                <input type="date" id="startDate" value="2026-03-01">
+                <div class="mini-dots">
+                    <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+                </div>
             </div>
-            <div class="date-box">
-                <span style="font-size: 10px;">SELESAI</span>
-                <input type="date" id="endDate">
+            <div class="calendar-box">
+                <span>SAMPAI TANGGAL</span>
+                <input type="date" id="endDate" value="2026-03-31">
+                <div class="mini-dots">
+                    <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+                </div>
             </div>
         </div>
-        <button onclick="filterRevenue()" style="width:100%; padding:12px; background:var(--primary); color:white; border:none; border-radius:10px; font-weight:600;">Terapkan Filter</button>
+
+        <button class="btn-apply" onclick="filterRevenue()">TERAPKAN FILTER DATA</button>
     </div>
 
-    <div style="font-weight: 600; margin-bottom: 10px;">Histori Pembayaran Berhasil</div>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 5px;">
+        <span style="font-weight: 700; font-size: 13px;">Data Pembayaran Masuk</span>
+        <span style="font-size: 11px; color: var(--text-muted);" id="countData">1 Terdeteksi</span>
+    </div>
+
     <div class="payment-list" id="paymentContainer">
-        <div class="payment-card" onclick="viewUserHistory('user123')">
+        <div class="payment-card" onclick="goToUserHistory('Budi Santoso', 'budi@example.com')">
             <div class="user-info">
                 <span class="username">Budi Santoso</span>
                 <span class="email">budi@example.com</span>
-                <span style="font-size: 11px; margin-top:5px; color:var(--text-dark);">02 Mar 2026 • 14:20</span>
+                <span class="pay-meta"><i class="far fa-calendar-alt"></i> 02 Mar 2026 • 14:20</span>
             </div>
-            <div style="text-align: right;">
+            <div class="pay-status">
                 <div class="badge-pkg">MULTI</div>
-                <div style="font-weight:700; font-size:14px; margin-top:5px;">Rp 250.000</div>
+                <div class="amount">Rp 250.000</div>
             </div>
         </div>
     </div>
@@ -174,16 +218,21 @@
     function openNav() { document.getElementById("mySidenav").style.width = "280px"; }
     function closeNav() { document.getElementById("mySidenav").style.width = "0"; }
 
-    function viewUserHistory(userId) {
-        // Logika untuk mengarahkan ke histori user masing-masing
-        alert("Menuju Histori Pembayaran User: " + userId + " (View Only)");
-    }
-
     function filterRevenue() {
-        // Di sini nantinya Anda hubungkan dengan Database Supabase
+        const pkg = document.getElementById('packageFilter').value;
+        const curr = document.getElementById('currencyFilter').value;
         const start = document.getElementById('startDate').value;
         const end = document.getElementById('endDate').value;
-        console.log("Filtering from " + start + " to " + end);
+        
+        alert(`Memproses Data:\nPaket: ${pkg}\nCurrency: ${curr}\nRentang: ${start} s/d ${end}`);
+        // Integrasi Supabase Fetching di sini nantinya
+    }
+
+    function goToUserHistory(name, email) {
+        // Mode View Only untuk pengecekan bukti pembayaran
+        console.log("Navigasi ke histori pembayaran user...");
+        alert(`Membuka Histori Pembayaran Paket:\n${name} (${email})\nMode: View Only / Bukti Bayar`);
+        // window.location.href = `user_payment_history.html?email=${email}`;
     }
 </script>
 
