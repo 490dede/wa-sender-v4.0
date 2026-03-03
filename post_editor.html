@@ -170,18 +170,40 @@
 
         input.onchange = async () => {
             const file = input.files[0];
-            const fileName = `editor_${Date.now()}_${file.name}`;
-            document.getElementById('btnPublish').disabled = true;
-            document.getElementById('btnPublish').innerText = "Uploading Image...";
+            if (!file) return; // Proteksi jika user cancel pilih file
 
-            const { data, error } = await _supabase.storage.from('bank-assets').upload(fileName, file);
-            if (!error) {
+            const fileName = `editor_${Date.now()}_${file.name}`;
+            const btnPublish = document.getElementById('btnPublish');
+            
+            // Simpan posisi kursor terakhir sebelum proses upload
+            const range = quill.getSelection(true); 
+
+            btnPublish.disabled = true;
+            btnPublish.innerText = "Uploading Image...";
+
+            try {
+                const { data, error } = await _supabase.storage.from('bank-assets').upload(fileName, file);
+                
+                if (error) throw error;
+
                 const { data: urlData } = _supabase.storage.from('bank-assets').getPublicUrl(fileName);
-                const range = quill.getSelection();
-                quill.insertEmbed(range.index, 'image', urlData.publicUrl);
+                const publicUrl = urlData.publicUrl;
+
+                // Masukkan gambar ke editor
+                // Jika range null (fokus hilang), taruh di akhir teks
+                const insertIndex = range ? range.index : quill.getLength();
+                quill.insertEmbed(insertIndex, 'image', publicUrl);
+                
+                // Pindahkan kursor ke setelah gambar agar user bisa lanjut mengetik
+                quill.setSelection(insertIndex + 1);
+
+            } catch (err) {
+                console.error("Upload error:", err);
+                alert("Gagal mengunggah gambar: " + err.message);
+            } finally {
+                btnPublish.disabled = false;
+                btnPublish.innerText = "PUBLIKASIKAN POSTINGAN";
             }
-            document.getElementById('btnPublish').disabled = false;
-            document.getElementById('btnPublish').innerText = "PUBLIKASIKAN POSTINGAN";
         };
     }
 
