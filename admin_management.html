@@ -8,13 +8,12 @@
     <style>
         /* PETUNJUK UBAH FONT:
            Ubah nilai di bawah ini untuk mengatur besar/kecilnya tulisan secara global.
-           Default Dashboard Admin adalah 13px untuk teks utama dan 11px untuk label.
         */
         :root { 
-            --base-font-size: 13px;   /* Ukuran teks utama (input, nama admin) */
-            --label-font-size: 11px;  /* Ukuran label kecil (italic) */
-            --title-font-size: 14px;  /* Ukuran judul section/app bar */
-            --badge-font-size: 10px;  /* Ukuran teks di dalam badge/role */
+            --base-font-size: 13px;   /* Ukuran teks utama */
+            --label-font-size: 11px;  /* Ukuran label kecil */
+            --title-font-size: 14px;  /* Ukuran judul section */
+            --badge-font-size: 10px;  /* Ukuran teks badge */
 
             --bg: #f4f7f6; 
             --tosca: #40E0D0; 
@@ -30,7 +29,7 @@
             margin: 0; 
             padding-bottom: 30px; 
             color: var(--text); 
-            font-size: var(--base-font-size); /* Mengikuti variabel global */
+            font-size: var(--base-font-size);
         }
         
         header { background: var(--white); padding: 15px; display: flex; align-items: center; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 1000; }
@@ -39,14 +38,11 @@
 
         .container { padding: 20px; max-width: 500px; margin: auto; }
 
-        /* Section Search & Filter */
-        .search-section { background: var(--white); padding: 18px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-        .label { display: block; font-size: var(--label-font-size); font-style: italic; color: #777; margin-bottom: 8px; }
-        .input-field { width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 12px; font-size: var(--base-font-size); box-sizing: border-box; background: #fafafa; outline: none; margin-bottom: 12px; }
-
         /* Form Daftar Baru */
         .form-card { background: var(--white); padding: 20px; border-radius: 20px; border-left: 5px solid var(--tosca); margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
         .form-title { font-size: var(--base-font-size); font-weight: 700; color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .label { display: block; font-size: var(--label-font-size); font-style: italic; color: #777; margin-bottom: 8px; }
+        .input-field { width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 12px; font-size: var(--base-font-size); box-sizing: border-box; background: #fafafa; outline: none; margin-bottom: 12px; }
         .btn-submit { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; margin-top: 10px; font-size: var(--base-font-size); }
 
         /* List Card Admin */
@@ -69,7 +65,6 @@
         .admin-details span { font-size: var(--label-font-size); color: #888; display: block; }
         .role-badge { font-size: var(--badge-font-size); font-weight: 700; color: var(--tosca); background: #e0fbf9; padding: 2px 8px; border-radius: 10px; display: inline-block; margin-top: 4px; text-transform: uppercase; }
 
-        /* Container Aksi */
         .admin-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; min-width: 50px; }
 
         /* Custom Toggle Switch */
@@ -106,15 +101,6 @@
 </header>
 
 <div class="container">
-    <div class="search-section">
-        <label class="label">Cari Admin / Search:</label>
-        <input type="text" class="input-field" placeholder="Nama atau email...">
-        <label class="label">Periode Bergabung / Join Date:</label>
-        <div class="input-field" style="display:flex; align-items:center; color:#4A90E2; font-weight:600; cursor:pointer;">
-            📅 Pilih Rentang Tanggal
-        </div>
-    </div>
-
     <div class="form-card">
         <div class="form-title">➕ DAFTARKAN STAF BARU</div>
         <label class="label">Nama Lengkap / Full Name:</label>
