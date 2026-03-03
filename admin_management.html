@@ -31,7 +31,7 @@
         .admin-details b { font-size: var(--base-font-size); color: #333; display: block; }
         .role-badge { font-size: var(--badge-font-size); font-weight: 700; color: var(--tosca); background: #e0fbf9; padding: 2px 8px; border-radius: 10px; text-transform: uppercase; }
 
-        .sidenav { height: 100%; width: 0; position: fixed; z-index: 2001; top: 0; left: 0; background-color: var(--white); overflow-x: hidden; transition: 0.3s; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
+        .sidenav { height: 100%; width: 0; position: fixed; z-index: 2001; top: 0; left: 0; background-color: var(--white); overflow-x: hidden; overflow-y: auto; transition: 0.3s; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
         .sidenav a { padding: 15px 25px; text-decoration: none; font-size: var(--base-font-size); color: #444; display: block; border-bottom: 1px solid #f9f9f9; }
         .sidenav .close-btn { text-align: right; font-size: 30px; display: block; padding: 10px 20px; color: var(--primary); cursor: pointer; }
         
@@ -48,10 +48,14 @@
 <div id="mySidenav" class="sidenav">
     <div class="close-btn" onclick="closeNav()">&times;</div>
     <a href="dashboard_admin.html">📊 Dashboard Analytics</a>
-    <a href="admin_management.html" style="font-weight:600; color:var(--primary);">👥 Admin Management</a> 
-    <a href="post_editor.html">📝 Post Editor</a> <a href="admin_revenue.html">💰 Revenue Tracking</a>
+    <a href="admin_management.html">👥 Admin Management</a>
+    <a href="admin_revenue.html">💰 Revenue Tracking</a>
+    <a href="post_editor.html">📝 Post Editor</a>
     <a href="admin_chat_bantuan.html">💬 Chat Bantuan</a>
-    <a href="user_login.html" style="color:#e74c3c; margin-top: 30px;">🚪 Keluar</a>
+    <a href="setting_bank.html">🏦 Pengaturan Bank & Logo</a>
+    
+    <div style="margin-top: 50px; border-top: 1px solid #f0f0f0;"></div>
+    <a href="user_login.html" style="color: #e74c3c;">🚪 Keluar</a>
 </div>
 
 <header>
