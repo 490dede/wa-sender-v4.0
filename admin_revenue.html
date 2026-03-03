@@ -6,6 +6,7 @@
     <title>Revenue Tracking - WA-Sender v4.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
         :root {
             --primary: #8e44ad;
@@ -23,7 +24,7 @@
             margin: 0;
             color: var(--text-dark);
             padding-bottom: 50px;
-            font-size: 14px; /* Ukuran font standar yang nyaman di mata */
+            font-size: 14px;
         }
 
         /* Sidenav Scrollable */
@@ -76,30 +77,22 @@
             outline: none; color: var(--text-dark);
         }
 
-        /* DESAIN DUAL VERTICAL CALENDAR-GRID */
-        .dual-calendar-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
+        /* Desain Single Row Date Range (Identik Dashboard) */
+        .date-range-container {
+            background: #fafafa;
+            border: 1.5px solid #eee;
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
             margin-bottom: 20px;
-        }
-        .calendar-box {
-            background: #fff;
-            border: 2px solid #eef2f7;
-            border-radius: 15px;
-            padding: 10px;
             transition: 0.3s;
         }
-        .calendar-box:focus-within { border-color: var(--primary); }
-        .calendar-box span { font-size: 9px; font-weight: 800; color: var(--primary); display: block; margin-bottom: 5px; }
-        .calendar-box input { 
-            border: none; width: 100%; font-size: 13px; font-weight: 700; 
-            color: var(--text-dark); outline: none; background: transparent;
-        }
-        .mini-dots {
-            display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; margin-top: 8px; border-top: 1px solid #f5f5f5; padding-top: 8px;
-        }
-        .dot { width: 4px; height: 4px; background: #ddd; border-radius: 50%; margin: auto; }
+        .date-range-container:hover { border-color: var(--primary); }
+        .date-range-container i { color: var(--primary); }
+        .date-range-container span { font-size: 13px; font-weight: 600; color: var(--text-dark); }
 
         /* Payment List & Card */
         .payment-card {
@@ -124,6 +117,9 @@
         .badge-pkg { 
             font-size: 10px; padding: 4px 10px; border-radius: 12px; 
             background: #f1f8ff; color: #007bff; font-weight: 800; 
+        }
+        .badge-promo {
+            background: #fff8e1; color: #ffa000;
         }
         .amount { font-weight: 800; font-size: 15px; margin-top: 5px; color: var(--secondary); }
 
@@ -153,49 +149,39 @@
 
 <div class="container">
     <div class="revenue-card">
-        <div style="font-size: 12px; font-weight: 600; letter-spacing: 1px; opacity: 0.8;">PENDAPATAN TERFILTER</div>
+        <div style="font-size: 11px; font-weight: 600; letter-spacing: 1px; opacity: 0.8;">PENDAPATAN TERFILTER</div>
         <div class="revenue-amount" id="totalDisplay">Rp 0</div>
     </div>
 
     <div class="filter-group">
-        <span class="filter-label">Filter Pembayaran Berdasarkan Paket</span>
+        <span class="filter-label">Filter Paket (PRO / MULTI / PROMO)</span>
         <select id="packageFilter">
-            <option value="all">Semua Paket (PRO & MULTI)</option>
-            <option value="PRO">Hanya Paket PRO</option>
-            <option value="MULTI">Hanya Paket MULTI</option>
-            <option value="PROMO">Hanya Aktifitas Promosi</option>
+            <option value="all">Semua Jenis Pembayaran</option>
+            <option value="PRO">Paket PRO</option>
+            <option value="MULTI">Paket MULTI</option>
+            <option value="PROMO">Aktivitas Promosi & Perubahan Harga</option>
         </select>
 
-        <span class="filter-label">Filter Berdasarkan Mata Uang (Currency)</span>
+        <span class="filter-label">Mata Uang (Currency)</span>
         <select id="currencyFilter">
             <option value="IDR">Rupiah (IDR)</option>
             <option value="USD">US Dollar (US$)</option>
             <option value="EUR">Euro (€)</option>
-            </select>
+        </select>
 
-        <span class="filter-label">Rentang Tanggal Kustom (Cek Revenue)</span>
-        <div class="dual-calendar-grid">
-            <div class="calendar-box">
-                <span>DARI TANGGAL</span>
-                <input type="date" id="startDate" value="2026-03-01">
-                <div class="mini-dots">
-                    <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
-                </div>
-            </div>
-            <div class="calendar-box">
-                <span>SAMPAI TANGGAL</span>
-                <input type="date" id="endDate" value="2026-03-31">
-                <div class="mini-dots">
-                    <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
-                </div>
-            </div>
+        <span class="filter-label">Rentang Tanggal Kustom</span>
+        <div class="date-range-container" id="dateRangePicker">
+            <i class="far fa-calendar-alt"></i>
+            <span id="dateRangeDisplay">Pilih Rentang Tanggal</span>
+            <input type="hidden" id="startDate">
+            <input type="hidden" id="endDate">
         </div>
 
         <button class="btn-apply" onclick="filterRevenue()">TERAPKAN FILTER DATA</button>
     </div>
 
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 5px;">
-        <span style="font-weight: 700; font-size: 13px;">Data Pembayaran Masuk</span>
+        <span style="font-weight: 700; font-size: 13px;">Histori Pembayaran User</span>
         <span style="font-size: 11px; color: var(--text-muted);" id="countData">1 Terdeteksi</span>
     </div>
 
@@ -204,19 +190,45 @@
             <div class="user-info">
                 <span class="username">Budi Santoso</span>
                 <span class="email">budi@example.com</span>
-                <span class="pay-meta"><i class="far fa-calendar-alt"></i> 02 Mar 2026 • 14:20</span>
+                <span class="pay-meta"><i class="far fa-clock"></i> 03 Mar 2026 • 15:55</span>
             </div>
             <div class="pay-status">
                 <div class="badge-pkg">MULTI</div>
                 <div class="amount">Rp 250.000</div>
             </div>
         </div>
+
+        <div class="payment-card" onclick="goToUserHistory('Siska Amelia', 'siska@example.com')">
+            <div class="user-info">
+                <span class="username">Siska Amelia</span>
+                <span class="email">siska@example.com</span>
+                <span class="pay-meta"><i class="fas fa-tag"></i> Promo Flash Sale Maret</span>
+            </div>
+            <div class="pay-status">
+                <div class="badge-pkg badge-promo">PROMO</div>
+                <div class="amount">Rp 149.000</div>
+            </div>
+        </div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
     function openNav() { document.getElementById("mySidenav").style.width = "280px"; }
     function closeNav() { document.getElementById("mySidenav").style.width = "0"; }
+
+    // Inisialisasi Date Range Picker
+    flatpickr("#dateRangePicker", {
+        mode: "range",
+        dateFormat: "d M Y",
+        onChange: function(selectedDates, dateStr, instance) {
+            if (selectedDates.length === 2) {
+                document.getElementById('dateRangeDisplay').innerText = dateStr.replace(" to ", " - ");
+                document.getElementById('startDate').value = selectedDates[0].toISOString().split('T')[0];
+                document.getElementById('endDate').value = selectedDates[1].toISOString().split('T')[0];
+            }
+        }
+    });
 
     function filterRevenue() {
         const pkg = document.getElementById('packageFilter').value;
@@ -224,15 +236,16 @@
         const start = document.getElementById('startDate').value;
         const end = document.getElementById('endDate').value;
         
-        alert(`Memproses Data:\nPaket: ${pkg}\nCurrency: ${curr}\nRentang: ${start} s/d ${end}`);
-        // Integrasi Supabase Fetching di sini nantinya
+        if(!start || !end) {
+            alert("Harap pilih rentang tanggal terlebih dahulu.");
+            return;
+        }
+        
+        alert(`Filtering:\nPaket: ${pkg}\nCurrency: ${curr}\nDari: ${start}\nSampai: ${end}`);
     }
 
     function goToUserHistory(name, email) {
-        // Mode View Only untuk pengecekan bukti pembayaran
-        console.log("Navigasi ke histori pembayaran user...");
-        alert(`Membuka Histori Pembayaran Paket:\n${name} (${email})\nMode: View Only / Bukti Bayar`);
-        // window.location.href = `user_payment_history.html?email=${email}`;
+        alert(`Membuka Histori Lengkap:\nUser: ${name}\nEmail: ${email}\nMode: View Only (Cek Bukti Bayar)`);
     }
 </script>
 
