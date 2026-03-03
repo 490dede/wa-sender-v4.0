@@ -89,7 +89,7 @@
 
         .sidenav {
             height: 100%; width: 0; position: fixed; z-index: 1000; top: 0; left: 0;
-            background-color: var(--white); overflow-x: hidden; transition: 0.3s; 
+            background-color: var(--white); overflow-x: hidden; overflow-y: auto; transition: 0.3s; 
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
         }
         .sidenav a { padding: 15px 25px; text-decoration: none; font-size: 15px; color: #444; display: block; border-bottom: 1px solid #f9f9f9; }
@@ -98,11 +98,16 @@
 <body>
 
 <div id="mySidenav" class="sidenav">
-    <a href="javascript:void(0)" onclick="closeNav()" style="padding: 20px; text-align: right; font-size: 30px;">&times;</a>
-    <a href="dashboard_admin_zero.html">📊 Dashboard Zero</a>
-    <a href="admin_management.html">🔑 Manage Admin</a>
-    <a href="setting_bank.html" style="font-weight:600; color:var(--primary);">🏦 Bank & QRIS</a>
-    <a href="post_editor_zero.html">📝 Post Editor (Zero)</a>
+    <div class="close-btn" onclick="closeNav()">&times;</div>
+    <a href="dashboard_admin.html">📊 Dashboard Analytics</a>
+    <a href="admin_management.html">👥 Admin Management</a>
+    <a href="admin_revenue.html">💰 Revenue Tracking</a>
+    <a href="post_editor.html">📝 Post Editor</a>
+    <a href="admin_chat_bantuan.html">💬 Chat Bantuan</a>
+    <a href="setting_bank.html">🏦 Pengaturan Bank & Logo</a>
+    
+    <div style="margin-top: 50px; border-top: 1px solid #f0f0f0;"></div>
+    <a href="user_login.html" style="color: #e74c3c;">🚪 Keluar</a>
 </div>
 
 <header>
