@@ -161,8 +161,11 @@
         }
     });
 
-    // 2. Image Handler ke Supabase
+    // 2. Image Handler ke Supabase - STABLE VERSION
     function imageHandler() {
+        // Simpan posisi kursor terakhir tepat sebelum membuka file picker
+        const range = quill.getSelection();
+        
         const input = document.createElement('input');
         input.setAttribute('type', 'file');
         input.setAttribute('accept', 'image/*');
@@ -170,32 +173,37 @@
 
         input.onchange = async () => {
             const file = input.files[0];
-            if (!file) return; // Proteksi jika user cancel pilih file
+            if (!file) return;
 
             const fileName = `editor_${Date.now()}_${file.name}`;
             const btnPublish = document.getElementById('btnPublish');
             
-            // Simpan posisi kursor terakhir sebelum proses upload
-            const range = quill.getSelection(true); 
-
+            // UI Feedback
             btnPublish.disabled = true;
             btnPublish.innerText = "Uploading Image...";
 
             try {
+                // Upload ke Supabase
                 const { data, error } = await _supabase.storage.from('bank-assets').upload(fileName, file);
                 
                 if (error) throw error;
 
+                // Ambil URL Publik
                 const { data: urlData } = _supabase.storage.from('bank-assets').getPublicUrl(fileName);
                 const publicUrl = urlData.publicUrl;
 
-                // Masukkan gambar ke editor
-                // Jika range null (fokus hilang), taruh di akhir teks
-                const insertIndex = range ? range.index : quill.getLength();
-                quill.insertEmbed(insertIndex, 'image', publicUrl);
+                // Tentukan lokasi insert: 
+                // Gunakan range yang disimpan tadi, atau jika null gunakan akhir dokumen
+                const index = range ? range.index : quill.getLength();
                 
-                // Pindahkan kursor ke setelah gambar agar user bisa lanjut mengetik
-                quill.setSelection(insertIndex + 1);
+                // Masukkan gambar
+                quill.insertEmbed(index, 'image', publicUrl, Quill.sources.USER);
+                
+                // Kembalikan fokus ke editor dan taruh kursor setelah gambar
+                setTimeout(() => {
+                    quill.focus();
+                    quill.setSelection(index + 1);
+                }, 100);
 
             } catch (err) {
                 console.error("Upload error:", err);
