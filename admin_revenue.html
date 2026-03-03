@@ -4,52 +4,188 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Revenue Tracking - WA-Sender v4.0</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --bg-page: #f4f7f6; --primary: #4A90E2; --text-dark: #333; --white: #ffffff; --accent: #8e44ad; }
-        body { font-family: 'Inter', sans-serif; margin: 0; background: var(--bg-page); color: var(--text-dark); }
-        header { background: var(--white); padding: 15px; display: flex; align-items: center; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 100; }
-        .menu-btn { font-size: 24px; cursor: pointer; background: none; border: none; margin-right: 15px; }
-        .container { padding: 20px; }
-        .card-stat { background: var(--accent); color: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; text-align: center; }
-        .form-label { display: block; font-size: 13px; font-style: italic; color: #555; margin-bottom: 8px; }
-        .input-control { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px; box-sizing: border-box; }
-        .history-card { background: var(--white); padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid var(--accent); }
-        .sidenav { height: 100%; width: 0; position: fixed; z-index: 1000; top: 0; left: 0; background-color: var(--white); overflow-x: hidden; overflow-y: auto; transition: 0.3s; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
-        .sidenav a { padding: 15px 25px; text-decoration: none; font-size: 15px; color: #444; display: block; border-bottom: 1px solid #f9f9f9; }
+        :root {
+            --primary: #8e44ad;
+            --secondary: #2ecc71;
+            --bg-light: #f4f7f6;
+            --white: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #7f8c8d;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            margin: 0;
+            color: var(--text-dark);
+            padding-bottom: 50px;
+        }
+
+        /* Sidenav Custom (Scrollable) */
+        .sidenav {
+            height: 100%; width: 0; position: fixed; z-index: 2001;
+            top: 0; left: 0; background-color: var(--white);
+            overflow-x: hidden; overflow-y: auto; transition: 0.3s;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        .sidenav a { padding: 15px 20px; text-decoration: none; color: #444; display: flex; align-items: center; border-bottom: 1px solid #f9f9f9; }
+
+        header {
+            background: var(--white);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: sticky; top: 0; z-index: 1000;
+        }
+
+        .container { padding: 20px; max-width: 500px; margin: auto; }
+
+        /* Card Estimasi Pendapatan */
+        .revenue-card {
+            background: linear-gradient(135deg, var(--primary), #9b59b6);
+            border-radius: 20px;
+            padding: 25px;
+            color: white;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 20px rgba(142, 68, 173, 0.2);
+        }
+        .revenue-amount { font-size: 28px; font-weight: 700; margin-top: 10px; }
+
+        /* Filter Section */
+        .filter-group {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+        }
+        .filter-label { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; display: block; }
+        
+        select {
+            width: 100%; padding: 12px; border-radius: 10px;
+            border: 1px solid #ddd; background: #fafafa;
+            font-family: 'Inter', sans-serif; font-size: 14px; margin-bottom: 15px;
+        }
+
+        /* Dual Vertical Calendar-Grid */
+        .calendar-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .date-box {
+            background: #fff; border: 1.5px solid var(--primary);
+            border-radius: 12px; padding: 10px; text-align: center;
+        }
+        .date-box input { border: none; width: 100%; font-size: 13px; text-align: center; color: var(--primary); font-weight: 600; }
+
+        /* Payment List & Cards */
+        .payment-list { margin-top: 20px; }
+        .payment-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 5px solid var(--secondary);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .payment-card:active { transform: scale(0.98); }
+        .user-info { display: flex; flex-direction: column; }
+        .username { font-weight: 600; font-size: 15px; }
+        .email { font-size: 12px; color: var(--text-muted); }
+        .badge-pkg { font-size: 10px; padding: 4px 8px; border-radius: 20px; background: #e8f5e9; color: var(--secondary); font-weight: bold; }
     </style>
 </head>
 <body>
-    <div id="mySidenav" class="sidenav">
-    <div class="close-btn" onclick="closeNav()">&times;</div>
+
+<div id="mySidenav" class="sidenav">
+    <div class="close-btn" style="text-align:right; padding:20px; font-size:24px;" onclick="closeNav()">&times;</div>
     <a href="dashboard_admin.html">📊 Dashboard Analytics</a>
     <a href="admin_management.html">👥 Admin Management</a>
-    <a href="admin_revenue.html">💰 Revenue Tracking</a>
+    <a href="admin_revenue.html" style="font-weight:bold; color:var(--primary);">💰 Revenue Tracking</a>
     <a href="post_editor.html">📝 Post Editor</a>
     <a href="admin_chat_bantuan.html">💬 Chat Bantuan</a>
     <a href="setting_bank.html">🏦 Pengaturan Bank & Logo</a>
-    
-    <div style="margin-top: 50px; border-top: 1px solid #f0f0f0;"></div>
-    <a href="user_login.html" style="color: #e74c3c;">🚪 Keluar</a>
 </div>
-    <header><button class="menu-btn" onclick="openNav()">☰</button><div style="font-weight:600;">WA-Sender v4.0</div></header>
-    <div class="container">
-        <div class="card-stat">
-            <div style="font-size: 12px; opacity: 0.8;">ESTIMASI PENDAPATAN</div>
-            <div style="font-size: 24px; font-weight: 600; margin-top: 5px;">Rp 0</div>
-        </div>
-        <label class="form-label">Filter Rentang Tanggal:</label>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-            <input type="date" class="input-control">
-            <input type="date" class="input-control">
-        </div>
-        <div style="font-size: 14px; font-weight: 600; margin: 20px 0 10px; color: var(--accent);">HISTORI PERUBAHAN HARGA & PROMO</div>
-        <div id="revenue-list"><p style="font-size: 12px; color: #999;">Memuat data aktivitas...</p></div>
+
+<header>
+    <i class="fas fa-bars" style="font-size:20px; cursor:pointer;" onclick="openNav()"></i>
+    <span style="margin-left: 15px; font-weight: 600;">Revenue Tracking</span>
+</header>
+
+<div class="container">
+    <div class="revenue-card">
+        <div style="font-size: 14px; opacity: 0.9;">TOTAL PENDAPATAN (FILTERED)</div>
+        <div class="revenue-amount" id="totalDisplay">Rp 0</div>
     </div>
-    <script>
-        function openNav() { document.getElementById("mySidenav").style.width = "280px"; }
-        function closeNav() { document.getElementById("mySidenav").style.width = "0"; }
-    </script>
+
+    <div class="filter-group">
+        <span class="filter-label">MATA UANG</span>
+        <select id="currencyFilter">
+            <option value="IDR">Rupiah (IDR)</option>
+            <option value="USD">US Dollar (US$)</option>
+            <option value="EUR">Euro (€)</option>
+        </select>
+
+        <span class="filter-label">PAKET LANGGANAN / PROMO</span>
+        <select id="packageFilter">
+            <option value="all">Semua Paket</option>
+            <option value="PRO">Paket PRO</option>
+            <option value="MULTI">Paket MULTI</option>
+            <option value="PROMO">Event Promosi Khusus</option>
+        </select>
+
+        <span class="filter-label">RENTANG TANGGAL PEMBAYARAN</span>
+        <div class="calendar-container">
+            <div class="date-box">
+                <span style="font-size: 10px;">MULAI</span>
+                <input type="date" id="startDate">
+            </div>
+            <div class="date-box">
+                <span style="font-size: 10px;">SELESAI</span>
+                <input type="date" id="endDate">
+            </div>
+        </div>
+        <button onclick="filterRevenue()" style="width:100%; padding:12px; background:var(--primary); color:white; border:none; border-radius:10px; font-weight:600;">Terapkan Filter</button>
+    </div>
+
+    <div style="font-weight: 600; margin-bottom: 10px;">Histori Pembayaran Berhasil</div>
+    <div class="payment-list" id="paymentContainer">
+        <div class="payment-card" onclick="viewUserHistory('user123')">
+            <div class="user-info">
+                <span class="username">Budi Santoso</span>
+                <span class="email">budi@example.com</span>
+                <span style="font-size: 11px; margin-top:5px; color:var(--text-dark);">02 Mar 2026 • 14:20</span>
+            </div>
+            <div style="text-align: right;">
+                <div class="badge-pkg">MULTI</div>
+                <div style="font-weight:700; font-size:14px; margin-top:5px;">Rp 250.000</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openNav() { document.getElementById("mySidenav").style.width = "280px"; }
+    function closeNav() { document.getElementById("mySidenav").style.width = "0"; }
+
+    function viewUserHistory(userId) {
+        // Logika untuk mengarahkan ke histori user masing-masing
+        alert("Menuju Histori Pembayaran User: " + userId + " (View Only)");
+    }
+
+    function filterRevenue() {
+        // Di sini nantinya Anda hubungkan dengan Database Supabase
+        const start = document.getElementById('startDate').value;
+        const end = document.getElementById('endDate').value;
+        console.log("Filtering from " + start + " to " + end);
+    }
+</script>
+
 </body>
 </html>
