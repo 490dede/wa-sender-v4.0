@@ -41,6 +41,14 @@
         .stat-card small { font-size: 10px; font-weight: 700; text-transform: uppercase; opacity: 0.8; }
         .stat-card b { font-size: 26px; display: block; margin-top: 5px; }
 
+        /* POST EDITOR STYLES */
+        .editor-card { background: var(--white); padding: 18px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border-top: 4px solid var(--primary); }
+        .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0; }
+        .tool-btn { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; padding: 8px 12px; cursor: pointer; font-size: 12px; color: #555; transition: 0.2s; }
+        .tool-btn:hover { background: var(--tosca); color: white; border-color: var(--tosca); }
+        #editor { min-height: 150px; outline: none; font-size: 13px; line-height: 1.6; color: #444; overflow-y: auto; }
+        #editor img { max-width: 100%; border-radius: 10px; margin: 10px 0; }
+
         .btn-export { width: 100%; padding: 16px; background: #27ae60; color: #fff; border: none; border-radius: 15px; font-weight: 600; cursor: pointer; font-size: 14px; box-shadow: 0 5px 15px rgba(39, 174, 96, 0.2); }
 
         /* Calendar Pop-up */
@@ -62,11 +70,13 @@
 <body>
 
 <input type="file" id="photoInput" style="display:none" accept="image/*" onchange="previewProfile(event)">
+<input type="file" id="postImageInput" style="display:none" accept="image/*" onchange="insertImage(event)">
 
 <div id="mySidenav" class="sidenav">
     <div class="close-btn" onclick="closeNav()">&times;</div>
     <a href="dashboard_admin.html" style="font-weight:600; color:var(--primary);">📊 Dashboard Analytics</a>
-    <a href="admin_management.html">👥 Admin Management</a> <a href="post_editor_staff.html">📝 Post Editor</a>
+    <a href="admin_management.html">👥 Admin Management</a> 
+    <a href="post_editor_staff.html">📝 Post Editor</a>
     <a href="admin_revenue.html">💰 Revenue Tracking</a>
     <a href="admin_chat_bantuan.html">💬 Chat Bantuan</a>
     <a href="user_login.html" style="color:#e74c3c; margin-top: 30px;">🚪 Keluar</a>
@@ -129,6 +139,21 @@
         <div class="stat-card"><small>User Aktif</small><b>856</b></div>
     </div>
 
+    <div class="editor-card">
+        <div style="font-size: 12px; font-weight: 600; color: var(--primary); margin-bottom: 12px;">📝 BUAT PESAN CEPAT</div>
+        <div class="toolbar">
+            <button class="tool-btn" onclick="execCmd('bold')"><b>B</b></button>
+            <button class="tool-btn" onclick="execCmd('italic')"><i>I</i></button>
+            <button class="tool-btn" onclick="execCmd('underline')"><u>U</u></button>
+            <button class="tool-btn" onclick="insertUrl()">🔗 Link</button>
+            <button class="tool-btn" onclick="document.getElementById('postImageInput').click()">🖼️ Gambar</button>
+        </div>
+        <div id="editor" contenteditable="true" placeholder="Tulis pesan promosi atau informasi di sini...">
+            Tulis pesan atau tempel konten promosi di sini...
+        </div>
+        <button class="btn-export" style="background: var(--primary); margin-top: 15px;">KIRIM KE SEMUA USER</button>
+    </div>
+
     <button class="btn-export">EXPORT DATA (.xlsx)</button>
 </div>
 
@@ -148,6 +173,7 @@
 </div>
 
 <script>
+    /* Navigasi & UI */
     function openNav() { document.getElementById("mySidenav").style.width = "280px"; }
     function closeNav() { document.getElementById("mySidenav").style.width = "0"; }
     
@@ -157,6 +183,44 @@
         reader.readAsDataURL(event.target.files[0]);
     }
 
+    /* Logic Post Editor */
+    const editor = document.getElementById('editor');
+
+    function execCmd(command) {
+        document.execCommand(command, false, null);
+    }
+
+    function insertUrl() {
+        const url = prompt("Masukkan URL (contoh: https://google.com):");
+        const text = prompt("Teks tampilan (kosongkan jika ingin URL saja):");
+        if (url) {
+            if (text) {
+                const linkHTML = `<a href="${url}" target="_blank" style="color: var(--primary); text-decoration: underline;">${text}</a>`;
+                document.execCommand('insertHTML', false, linkHTML);
+            } else {
+                document.execCommand('createLink', false, url);
+            }
+        }
+    }
+
+    function insertImage(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const imgHTML = `<br><img src="${e.target.result}"><br>`;
+            document.execCommand('insertHTML', false, imgHTML);
+        };
+        if (file) reader.readAsDataURL(file);
+    }
+
+    // Placeholder behavior
+    editor.addEventListener('focus', function() {
+        if (this.innerText.trim() === "Tulis pesan atau tempel konten promosi di sini...") {
+            this.innerHTML = "";
+        }
+    });
+
+    /* Logic Kalender */
     let startDate = null; let endDate = null;
     let viewDate = new Date();
     const months = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
