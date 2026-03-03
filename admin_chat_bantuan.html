@@ -18,18 +18,23 @@
         .dot { width: 8px; height: 8px; border-radius: 50%; background: #ddd; }
         .dot.active { background: var(--success); }
         .form-label { display: block; font-size: 13px; font-style: italic; color: #555; margin-bottom: 8px; }
-        .sidenav { height: 100%; width: 0; position: fixed; z-index: 1000; top: 0; left: 0; background-color: var(--white); overflow-x: hidden; transition: 0.3s; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
+        .sidenav { height: 100%; width: 0; position: fixed; z-index: 1000; top: 0; left: 0; background-color: var(--white); overflow-x: hidden; overflow-y: auto; transition: 0.3s; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
         .sidenav a { padding: 15px 25px; text-decoration: none; font-size: 15px; color: #444; display: block; border-bottom: 1px solid #f9f9f9; }
     </style>
 </head>
 <body>
     <div id="mySidenav" class="sidenav">
-        <a href="javascript:void(0)" onclick="closeNav()" style="font-size:30px; text-align:right;">&times;</a>
-        <a href="dashboard_admin.html">📊 Dashboard</a>
-        <a href="post_editor_staff.html">📝 Post Editor</a>
-        <a href="admin_revenue.html">💰 Revenue Tracking</a>
-        <a href="admin_chat_bantuan.html" style="font-weight:600; color:var(--primary);">💬 Chat Bantuan</a>
-    </div>
+    <div class="close-btn" onclick="closeNav()">&times;</div>
+    <a href="dashboard_admin.html">📊 Dashboard Analytics</a>
+    <a href="admin_management.html">👥 Admin Management</a>
+    <a href="admin_revenue.html">💰 Revenue Tracking</a>
+    <a href="post_editor.html">📝 Post Editor</a>
+    <a href="admin_chat_bantuan.html">💬 Chat Bantuan</a>
+    <a href="setting_bank.html">🏦 Pengaturan Bank & Logo</a>
+    
+    <div style="margin-top: 50px; border-top: 1px solid #f0f0f0;"></div>
+    <a href="user_login.html" style="color: #e74c3c;">🚪 Keluar</a>
+</div>
     <header><button class="menu-btn" onclick="openNav()">☰</button><div style="font-weight:600;">WA-Sender v4.0</div></header>
     <div class="container">
         <h3 style="font-size: 16px; margin: 0 0 20px;">CHAT BANTUAN USER</h3>
